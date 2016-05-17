@@ -209,72 +209,91 @@ p arr.any?{|i| i > 2 }
 
 symbols = ["a".."z", "A".."Z", "0".."9"].map{ |range| range.to_a }.flatten
 p (0...12).map{ symbols[rand(symbols.size)] }.join
-=end
 
 arr = [2, 1, 3, 5, 6, 7, 4]
 p arr.sort{ |x, y| y <=> x }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+=end
+
+=begin
+hash = {1=>4, 2=>8, 4=>11, 7=>17}
+p hash[1]
+p hash[3]
+p hash[7]
+
+arr = [1,3,4,56,23,1,3,2,56,23,3,4,56]
+p arr.inject(Hash.new{0}){|result,i| 
+	result[i] += 1 
+	result
+}
+
+arr = [["book1", 29], ["book2", 57], ["book3", 34]]
+book_name = "book2"
+p arr.find_all{|key, value| key == book_name}[0][-1]
+
+hash = {"book1" => 29, "book2" => 57, "book3" => 34 }
+p hash["book2"]
+
+arr1 = [1,2,3,4,5,6]
+p Hash[*arr1]
+
+arr2 = [[10,11], [12,13], [14,15]]
+p Hash[*arr2.flatten]
+
+arr3 = [[80,81,82], [70,71,72]]
+p Hash[*arr3.transpose.flatten]
+
+hash = {}
+hash[1] = 4
+hash[2] = 9
+p hash
+
+hash = Hash.new("")
+hash["first"] += "title"
+hash["two"]   += "title"
+p hash
+
+hash = Hash.new(0)
+hash["tax"] += 13
+hash["tax"] += 34
+p hash
+
+hash1 = {1=>3, 4=>6, 8=>11}.keys
+hash2 = {1=>3, 4=>6, 8=>11}.values
+p hash1
+p hash2
+
+hash1 = {"book1" => 10, "book2" => 23}
+p hash1.invert
+
+hash2 = {"book2" => 10, "book3" => 10}
+p hash2.invert
+
+p hash1.merge!(hash2)
+p hash1.size
+
+hash = {2=>3, 4=>7, 9=>8}
+hash.delete(4)
+p hash
+p hash.to_a
+p hash.max
+p hash.min
+p hash.max_by{ |key, value| value }
+p hash.min_by{ |array| array[0] }
+
+hash1 = {}
+hash2 = {"book2" => 10, "book3" => 15}
+p hash1.empty?
+p hash2.empty?
+p hash1.key?("book3")
+p hash2.key?("book3")
+p hash1.include?("book3")
+p hash2.include?("book3")
+p hash1.value?(15)
+p hash2.value?(15)
+
+hash = {"book1"=>50, "book2"=>10, "book3"=>18}
+p hash.find_all{ |key, value| value < 15 }
+p hash.map{ |key, value| "#{key} - #{value}" }
+p hash.inject(0){ |result, (key, value)| result + value }
+
+=end
