@@ -121,34 +121,66 @@ puts s5
 
 p s5.size
 p s5.length
+p s5.count("a-z")
 
+s5.each_line.with_index do |i, num|
+  print "Num #{num + 1}: #{i}"
+end
 
+s6 = "test text"
+p s6.downcase
+p s6.upcase
+p s6.capitalize
 
+s7 = "I love Ruby"
+p s7.strip[7,4]
+p s7.strip[2,4]
+p s7.strip[0..5]
+p s7.strip[7,4] = "PHP"
 
+s8 = " <h1> text, spam, hi, bro, spam! "
+p s8.sub(/spam/, "***")
+p s8.gsub(/spam/, "***")
+p s8.index("spam")
+p s8.rindex("spam")
+p s8.include?("spam")
+p s8.scan("spam")
+p s8 << "new string\n"
+p s8.chomp
+p s8.strip
+p s8.reverse
+p s8.delete(",!")
+p s8.delete("<h1>")
 
+=begin
+require 'digest'
+p Digest::SHA256.hexdigest("password")
 
+puts "Enter you password"
+password = gets.chomp
+p Digest::SHA256.hexdigest(password)
+=end
 
+puts "===================================================="
+p 64**2
+p 9**3
+p 2**4
+p 3/3
+p 3/4
+p 9/3
+p 3.0/4
+p 3.0/4.0
+p 3.49.round
+p 4.50.round
 
+p Time.new
+p Time.mktime(2016)
+p Time.mktime(2016,6,2,17,05)
+p Time.local(2016,6,2,17,05)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+var = ["apple","car","cat","phone","pc","gamebox"]
+p var.values_at(0,3,4)
+p var.values_at(0..2,5)
 
 
 
