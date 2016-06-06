@@ -182,17 +182,70 @@ var = ["apple","car","cat","phone","pc","gamebox"]
 p var.values_at(0,3,4)
 p var.values_at(0..2,5)
 
+file1 = File.new("test1", "w")
+file1.close
+
+file2 = File.new("test2", "a+")
+file2.puts "Add text"
+file2.close
+
+file2 = File.new("test2")
+size = file2.size
+file2.each do |i|
+  puts i
+end
+puts "Size file: #{size}"
+file2.close
+
+=begin
+require "sqlite3"
+
+# Open a database
+db = SQLite3::Database.new "test.db"
+
+# Create a table
+rows = db.execute <<-SQL
+  create table numbers (
+    name varchar(30),
+    val int
+  );
+SQL
 
 
+# Execute a few inserts
+{
+  "one" => 1,
+  "two" => 2,
+}.each do |pair|
+  db.execute "insert into numbers values ( ?, ? )", pair
+end
 
+# Create another table with multiple columns
 
+db.execute <<-SQL
+  create table students (
+    name varchar(50),
+    email varchar(50),
+    grade varchar(5),
+    blog varchar(50)
+  );
+SQL
 
+# Execute inserts with parameter markers
+db.execute("INSERT INTO students (name, email, grade, blog) 
+            VALUES (?, ?, ?, ?)", ["Jane", "me@janedoe.com", "A", "http://blog.janedoe.com"])
 
+# Find a few rows
+db.execute( "select * from numbers" ) do |row|
+  p row
+end
 
+db.execute( "select name, email from students" ) do |row|
+  p row
+end
 
-
-
-
+db.close
+=end
 
 
 
