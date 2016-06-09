@@ -98,6 +98,29 @@ p api.url = "google.com"
 api.test_method
 =end
 
+arr = ["index.html", "index.rb","hi.rb"]
+p arr.select{|x| x =~ /\.rb/}.map{|x| x[0..-4]}
+p arr.grep(/(.*)\.rb/){$1}
+
+class String
+	def censor(bad_word)
+		self.gsub! "#{bad_word}", "CENSORED"
+	end
+
+	def num_of_chars
+		size
+	end
+end
+
+p "Bad post idiot".censor("idiot")
+p "Hi world".num_of_chars
+
+
+
+
+
+
+
 
 
 
