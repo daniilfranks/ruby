@@ -1,0 +1,13 @@
+git init
+
+#test
+mkdir db
+touch db/development.sqlite3
+touch .gitignore
+vim db/*.sqlite3
+db/*.sqlite3
+:wq
+
+git status
+git add .
+
