@@ -1,0 +1,20 @@
+git init
+
+#test
+mkdir db
+touch db/development.sqlite3
+touch .gitignore
+vim db/*.sqlite3
+db/*.sqlite3
+:wq
+
+git status
+git add .
+git commit -m "Add git file"
+git log
+#git pull
+#git push -f origin master
+git remote add origin https://github.com/danilababanov/ruby.git
+git push
+
+
