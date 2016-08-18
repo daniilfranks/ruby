@@ -13,3 +13,4 @@ irb "x".methods 2.methods -вывод списка операций
 
 
 
+
