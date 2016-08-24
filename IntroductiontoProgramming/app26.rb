@@ -3,17 +3,11 @@ def get_command
 
 	if x == 1
 		cmd = :left
-	end
-
-	if x == 2
+	elsif x == 2
 		cmd = :right
-	end
-
-	if x == 3
+	elsif x == 3
 		cmd = :up
-	end
-
-	if x == 4
+	else x == 4
 		cmd = :down
 	end
 
