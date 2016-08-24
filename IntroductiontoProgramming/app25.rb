@@ -48,3 +48,15 @@ end
 
 command = get_command
 puts "#{command}"
+
+
+def get_symbols
+	:symbols
+end
+
+symbols = get_symbols
+puts "#{symbols}"
+
+if symbols == :symbols
+	puts "puts :symbols"
+end
