@@ -35,4 +35,7 @@ loop do
 	hash[name] = phone
 
 end
-puts hash
+
+hash.each do |key, value|
+	puts "#{key} #{value}"
+end
