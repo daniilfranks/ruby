@@ -8,6 +8,11 @@ loop do
 		break
 	end
 
+	unless dictionary[word]
+		puts "No word!!!"
+		break
+	end
+
 	translation = dictionary[word]
 	puts "Translation:(#{translation.size}) #{translation}"
 end

@@ -11,3 +11,7 @@ hash.each_value do |value|
 	puts "#{value}"
 end
 puts x
+
+p hash.key? :name
+p hash.key? :city
+p hash.value? ['Den']
