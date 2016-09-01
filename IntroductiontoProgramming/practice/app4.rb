@@ -30,7 +30,10 @@ class Transaction
 	end
 end
 
-saving = Account.new(100)
+savings = Account.new(100)
 checking = Account.new(200)
 
-trans = Transaction.new(checking, saving)
+trans = Transaction.new(checking, savings)
+trans.transfer(50)
+p checking
+p savings
