@@ -1,0 +1,5 @@
+Jan, 100
+Feb, 20
+March, 40
+May, 55
+June, 300
