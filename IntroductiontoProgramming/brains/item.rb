@@ -30,6 +30,10 @@ class Item
 		(@real_price - @real_price*self.class.discount) + tax if @real_price
 	end
 
+	def to_s
+		"#{self.name}:#{self.price}:#{self.weight}"
+	end
+
 	private
 		def tax
 			type_tax = if self.class == VirtualItem
