@@ -1,11 +1,6 @@
-require_relative "string"
-require_relative "item_container"
-require_relative "item"
-require_relative "virtual_item"
-require_relative "real_item"
-require_relative "antique_item"
-require_relative "cart"
-require_relative "order"
+require_relative "store_application"
+
+StoreApplication.new
 
 =begin
 cart = Cart.new
@@ -72,8 +67,8 @@ puts order.count_valid_items
 =end
 
 @items = []
+@items << AntiqueItem.new("car", weight: 500, price: 100)
 @items << VirtualItem.new({:weight => 500, :price => 100, :name => "error"})
-@items << RealItem.new({:weight => 500, :price => 100, :name => "cake"})
 @items << RealItem.new({:weight => 500, :price => 49, :name => "kettle"})
 @items << RealItem.new({:weight => 900, :price => 500, :name => "cat"})
 
@@ -81,3 +76,11 @@ cart = Cart.new("den")
 cart.add_item RealItem.new({:weight => 500, :price => 100, :name => "car"})
 cart.add_item RealItem.new({:weight => 400, :price => 200, :name => "car"})
 p cart.all_cars
+
+#puts cart.kind_of?(Cart)
+puts @items[0].kind_of?(Item)
+puts @items[0].kind_of?(AntiqueItem)
+puts @items[0].respond_to?(:info)
+puts @items[0].respond_to?(:errorinfo)
+puts @items[0].send(:price)
+puts @items[0].send(:tax)
