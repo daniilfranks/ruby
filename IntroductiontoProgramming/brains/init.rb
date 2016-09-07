@@ -1,7 +1,10 @@
+require_relative "item_container"
 require_relative "cart"
+require_relative "order"
 require_relative "item"
 require_relative "virtual_item"
 require_relative "real_item"
+
 
 =begin
 cart = Cart.new
@@ -29,7 +32,7 @@ cart.delete_invalid_items
 p cart.items
 =end
 
-
+=begin
 item3 = VirtualItem.new({:price => 5, :name => "Dog"})
 item4 = RealItem.new({:weight => 900, :price => 500, :name => "Cat"})
 
@@ -37,9 +40,37 @@ cart2 = Cart.new
 cart2.add_item item3
 cart2.add_item item4
 
+cart2.remove_item
 cart2.delete_invalid_items
 
 p cart2.items
 
 puts item4.price
 puts item4.real_price
+puts cart2.items.size
+
+
+item5 = VirtualItem.new({:price => 23, :name => "Dog"})
+item6 = RealItem.new({:weight => 500, :price => 49, :name => "Cat"})
+item7 = RealItem.new({:weight => 500, :price => 49, :name => "Cat"})
+order = Order.new
+
+order.add_item item5
+order.add_item item6
+order.add_item item7
+
+order.delete_invalid_items
+
+p order.items
+
+puts item6.price
+puts item6.real_price
+puts order.items.size
+
+puts order.count_valid_items
+=end
+
+@items = []
+@items << RealItem.new({:price => 100, :name => "cake"})
+@items << RealItem.new({:weight => 500, :price => 49, :name => "kettle"})
+@items << RealItem.new({:weight => 900, :price => 500, :name => "cat"})
