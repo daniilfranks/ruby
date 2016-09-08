@@ -9,6 +9,8 @@ module ItemContainer
 
 	module InstanceMethods
 
+		attr_reader :items
+
 		def method_missing(method_name)
 			if method_name =~ /^all_/
 				show_all_items_name(method_name.to_s.sub(/^all_/, '').chomp('s'))
@@ -60,5 +62,4 @@ module ItemContainer
 		end
 	end
 =end
-
 end

@@ -9,8 +9,12 @@ class Item
 	end
 
 	attr_reader :real_price, :name   #создает геттер
-	attr_writer :price  #создает сеттер
+	#attr_writer :price  #создает сеттер
 	#attr_accessor :price, :weight, :name #создает геттер и сеттер
+
+	def price=(value)
+		@real_price = value
+	end
 
 	def info
 		#[price, weight, name]
@@ -31,7 +35,7 @@ class Item
 	end
 
 	def to_s
-		"#{self.name}:#{self.price}:#{self.weight}"
+		"#{self.name}:#{self.price}"
 	end
 
 	private

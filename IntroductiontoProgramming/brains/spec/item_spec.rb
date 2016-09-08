@@ -3,10 +3,19 @@ require 'rspec'
 require_relative "../item"
 require_relative "../virtual_item"
 
-describe Item do 
+describe Item do
+	before(:each) do 
+		@item = Item.new("cat", price: 100)
+	end
+
+	#before(:all) do 
+	#end	
+
 	it "calculates price" do 
-		item = Item.new("cake", price: 200)
-		item.real_price.should == 200
+		@item.price.should == 107
+	end
+
+	it "return info object" do 
+		@item.to_s.should == "cat:107.0"
 	end
 end
-
