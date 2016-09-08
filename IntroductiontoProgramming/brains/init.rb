@@ -12,10 +12,14 @@ StoreApplication.config do |app|
 	end
 end
 
-p StoreApplication.environment
-p StoreApplication.name
-p StoreApplication::Admin.email
-p StoreApplication::Admin.login
+unless StoreApplication.frozen?
+ puts StoreApplication.environment
+ puts StoreApplication.name
+ puts StoreApplication.name = "New name"
+ puts StoreApplication::Admin.email
+ puts StoreApplication::Admin.email = "New email"
+ puts StoreApplication::Admin.login
+end
 
 =begin
 cart = Cart.new
@@ -99,3 +103,7 @@ puts @items[0].respond_to?(:info)
 puts @items[0].respond_to?(:errorinfo)
 puts @items[0].send(:price)
 puts @items[0].send(:tax)
+
+order = Order.new
+order.place
+puts order.placed_at.utc
