@@ -1,6 +1,21 @@
 require_relative "store_application"
 
-StoreApplication.new
+StoreApplication.config do |app|
+	
+	app.name        = "My store"
+	app.environment = :production
+
+	app.admin do |admin|
+		admin.email = "admin@web.xyx"
+		admin.login = "admin"
+		admin.send_info_email_on :mondays
+	end
+end
+
+p StoreApplication.environment
+p StoreApplication.name
+p StoreApplication::Admin.email
+p StoreApplication::Admin.login
 
 =begin
 cart = Cart.new
