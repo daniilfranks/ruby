@@ -79,3 +79,7 @@ p 10**4
 p 16%9
 p 100%33
 
+p String(1)
+p Integer("2")
+p Float(5)
+
