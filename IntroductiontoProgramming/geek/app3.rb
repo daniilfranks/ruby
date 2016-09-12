@@ -23,3 +23,12 @@ def hi_lambda
 end
 
 puts hi_lambda
+
+nums = []
+i = 0
+
+while i < 10
+	i += 1
+	nums[i] = rand(1..100)
+end
+puts nums
