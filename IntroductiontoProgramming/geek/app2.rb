@@ -117,3 +117,11 @@ loop do
 		puts "Command is not!"
 	end
 end
+
+=begin
+if booka[loophash].nil?
+	puts "Error!"
+else
+	......
+end
+=end
