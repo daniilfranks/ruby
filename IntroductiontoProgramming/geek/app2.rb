@@ -83,8 +83,6 @@ loop do
 	puts "All books"
 	puts "Add book"
 	puts "Delet book"
-	puts "Update book"
-	puts "Rate book"
 	puts "Exit"
 
 	loophash = {}
