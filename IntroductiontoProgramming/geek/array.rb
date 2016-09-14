@@ -143,5 +143,3 @@ n.pop
 n.push "Zak"
 p n
 p n.reverse
-
-
