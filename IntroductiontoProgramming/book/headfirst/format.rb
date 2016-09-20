@@ -3,7 +3,6 @@ puts f
 puts f.class
 puts f + 3
 
-
 def test_format(format_string, number)
 	sprintf(format_string, number)
 end
@@ -19,7 +18,6 @@ p b.class
 c = (sprintf "%.2f", 10 / 3.0).to_f
 puts c
 puts c.class
-
 
 a = 23.869347347232
 p a.round(2)
