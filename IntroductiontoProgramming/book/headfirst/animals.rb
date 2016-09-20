@@ -20,11 +20,14 @@ class Bird < Animal
 	end  
 
 	def move(destination)     
-		puts "Flying to the #{destination}."   
+		super   
 	end 
 end 
 
 class Dog < Animal 
+	def to_s
+		"#{name} #{age}"
+	end
 end 
 
 class Cat < Animal 
@@ -33,7 +36,7 @@ class Cat < Animal
  	end  
 
  	def move(destination)     
- 		puts "Running to the #{destination}."   
+ 		super   
  	end 
 end 
 
@@ -51,3 +54,9 @@ dog.age = 3
 p dog.talk
 p dog.report_age
 p dog.move("test")
+
+puts dog
+
+
+p Animal.superclass
+p Animal.methods
