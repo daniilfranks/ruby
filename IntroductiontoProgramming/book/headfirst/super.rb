@@ -35,5 +35,3 @@ hiphp.hi_ruby
 p Hi.new.hi_name("Jok")
 
 Hi.new.test
-
-
