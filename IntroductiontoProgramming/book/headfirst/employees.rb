@@ -74,6 +74,7 @@ class HourlyEmployee < Employee
   	self.hourly_wage = hourly_wage     
   	self.hours_per_week = hours_per_week   
   end 
+  
   def print_pay_stub     
   	print_name     
   	pay_for_period = hourly_wage * hours_per_week * 2     
