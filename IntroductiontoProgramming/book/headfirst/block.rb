@@ -81,3 +81,56 @@ prices = [3.99, 25.00, 8.99]
 puts format("%.2f", total(prices)) 
 puts format("%.2f", refund(prices))
 show_discounts(prices)
+
+
+def print_block
+	block_result = yield
+	puts block_result
+end
+
+print_block { 1+1 }
+print_block do 
+	"Not return"
+	"Result!"
+end
+print_block { "I hated Truncated".include?("Truncated")}
+
+
+def hi
+	puts "Hi #{yield}"
+end
+
+hi { "Den" }
+
+
+def triple_block
+	puts 3 * yield
+end
+
+triple_block { 3 }
+
+
+def alert_if_true
+	if yield
+		puts "true"
+	else
+		puts "false"
+	end
+end
+
+alert_if_true { 2 + 2 == 5}
+
+name = ""
+alert_if_true { name != ""}
+
+alert_if_true { 2 > 1 }
+
+
+def calc
+	result = yield(1, 1)
+	puts result
+end
+
+calc do |param1, param2|
+	param1 + param2
+end

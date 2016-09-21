@@ -24,4 +24,3 @@ while index < array.length
 	puts array[index]
 	index += 1
 end
-
