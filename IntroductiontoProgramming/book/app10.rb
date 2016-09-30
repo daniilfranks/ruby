@@ -50,4 +50,11 @@ end
 #begin end
 #rescue
 
+def whats_your_age(age)
+  raise ArgumentError, "wrong argument" if age < 0
+  raise TypeError, "wrong type argument" if age.is_a?(String)
+  puts "You are #{age}"
+end
+
+whats_your_age(25)
 
