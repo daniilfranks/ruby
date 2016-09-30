@@ -32,3 +32,21 @@ puts "A".ord
 puts "b".ord
 puts "B".ord
 
+
+#присвоит значение переменной если оно не было задано
+string = "true"
+p string ||= "new"
+
+string = nil
+p string ||= "new"
+
+def get_raise
+  puts "Error puts"
+  raise "Error raise!"
+end
+
+#get_raise
+
+#begin end
+#rescue
+
