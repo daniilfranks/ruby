@@ -13,3 +13,18 @@ rescue
 end 
 
 
+class User
+
+  def say_secret_with_self
+    self.secret
+  end
+
+  protected
+
+  def secret
+    "secret"
+  end
+end
+
+u = User.new
+u.say_secret_with_self # => "secret"
