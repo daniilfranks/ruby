@@ -1,0 +1,339 @@
+#http://rubyblog.com.ua
+Одним из gem'ов трейлблейзера является Reform. Вы можете легко найти как он используется. Но, если вкратце - это такой класс формы, который позволяет вам обьявить, какие параметры вы принимаете от пользователя и к какой модели привязана форма. Форма отвечает за валидацию, фильтрацию параметров и сохранение валидных параметров в модели.
+
+Сегодня я хочу написать мини-версию gem'а Reform. Давайте посмотрим, что будут уметь наши формы после того, как мы напишем имплементацию:
+
+class MyForm < Proform
+  attribute :title
+  attribute :description
+
+  validates :title, presence: true
+end
+Мы наследуем класс MyForm от Proform и, благодаря этому, мы сможем указывать какие атрибуты будет принимать форма, кроме того указываем, что некоторые из атрибутов обязательны.
+
+Приведу пример использования MyForm, чтобы было более понятно:
+
+# let's use Struct as a model for simplicity
+Product = Struct.new(:title, :description)
+my_product = Product.new('RubyBlog', 'The best blog ever')
+
+params = { description: 'Foo' }
+form = MyForm.new(my_product)
+form.valid? # => true
+form.validate(params) # => false, because title is required
+form.valid? # => false
+form.errors # {:title=>["can't be blank"]}
+
+params = { title: 'rubyblog.com.ua' }
+form = MyForm.new(my_product)
+form.validate(params) # => true
+form.valid? # => true
+form.apply # assigns provided title to model my_product
+Я знаю, что на данный момент здесь многовато кода, но давайте все же разберемся, что умеют наши формы. Напомню, что в MyForm мы указали, что форма будет принимать атрибуты: title и description. Кроме того, поле title является обязательным.
+
+При создании формы мы передаем модель, к которой эта форма привязана. Для примера я воспользовался простым Struct, но это вполне может быть и модель ActiveRecord.
+
+После того, как у нас появился обьект form мы можем передать ему параметры, которые нам присылает пользователь и форма сможет их провалидировать: метод validate. Всегда можно проверить валидна ли форма вызвав метод valid?. В случае ошибок валидации, они будут доступны по методу errors. Если параметры, которые мы получили от юзера валидны - можем вызывать метод apply, который присвоит переданные атрибуты модели.
+
+Надеюсь, что к этому моменту мы все понимаем чего мы ожидаем от форм и можно перейти к самому интересному - к имплементации базового класса Proform, который позволит указывать атрибуты и валидации, которые должна иметь форма.
+
+Статья называется Class Macros в Ruby. Настало время рассмотреть, что мы называем макросами класса. Если вы используете Ruby On Rails, то вы наверняка их видели. Они используются для обьявления, например, ассоциаций:
+
+class User
+  has_many :posts
+end
+has_many - это Class Macro класса User. Некоторые gem'ы предоставляют собственные макросы, например:
+
+class Post
+  acts_as_paranoid
+end
+acts_as_paranoid - еще один макрос.
+
+Теперь посмотрим на нашу форму:
+
+class MyForm < Proform
+  attribute :title
+  attribute :description
+
+  validates :title, presence: true
+end
+Видно, что нам необходимо создать два макроса для класса Proform: attribute и validates.
+
+Макрос attribute будет указывать, какие именно атрибуты мы будем обрабатывать. Если в params придут атрибуты, которые не указаны как доступные атрибуты формы, мы их просто проигнорируем.
+
+Также, необходимо предусмотреть макрос validates, с помощью которого мы укажем как валидировать атрибут. Для простоты я предлагаю написать имплементацию только одного типа валидации: { presence: true }.
+
+Начнем с самого простого. Создадим базовый класс Proform и унаследуем от него MyForm:
+
+class Proform
+end
+
+class MyForm < Proform
+end
+Попробуем добавить несуществующий, на данный момент, макрос и посмотреть что получится:
+
+class Proform
+end
+
+class MyForm < Proform
+  attribute :title # => `<class:MyForm>': undefined method `attribute' for MyForm:Class (NoMethodError)
+end
+Все верно, так как Ruby выполняет весь код внутри класса, он сразу же попытался вызвать метод attribute у MyForm. Внутри класса MyForm на момент вызова attribute, self равно MyForm, соответственно нам нужно добавить метод класса attribute чтобы все заработало.
+
+class Proform
+  def self.attribute(name)
+    puts name
+  end
+end
+
+class MyForm < Proform
+  attribute :title  # => title
+end
+Макрос отработал, так как мы определили метод self.attribute в родительском классе.
+
+Теперь возникает интересный вопрос: где сохранить список всех атрибутов, которые будет поддерживать форма? Макрос вызывается сразу, так как Ruby выполняет код внутри класса. Значит в любой момент времени класс MyForm должен знать свой набор атрибутов.
+
+Но метод self.attribute - это метод класса. Он ничего не знает о будущих экземплярах класса. Соответственно никакой instance variable он присвоить не может. Переменными класса мы тоже воспользоваться не сможем, так как каждая форма должна иметь свой уникальный набор атрибутов, рассмотрим пример:
+
+class Proform
+  @@attributes = []
+
+  def self.attribute(name)
+    @@attributes << name
+  end
+
+  def self.attributes
+    @@attributes
+  end
+end
+
+class MyForm < Proform
+  attribute :title 
+end
+
+class FooForm < Proform
+  attribute :foo
+end
+
+MyForm.attributes # => WRONG [:title, :foo] 
+Класс Proform не может использовать переменные класса, так как атрибуты обьявленные в одном из классов, становятся атрибутами других классов.
+
+Чтобы сильно не вдаваться в подробности, скажу, что мы воспользуемся class instance variable. В Ruby - практически все является обьектом. В том числе и класс - это экземпляр класса Class. Следовательно, если это экземпляр класса Class, то у него тоже могут быть свои instance variables.
+
+Если вы сейчас ничего не поняли и находитесь в состоянии шока - это отлично, потому что все эти тонкости описаны в книге "Metaprogramming Ruby" и вам обязательно нужно ее почитать. А если вы поняли все что я выше написал - то можем смело двигаться дальше.
+
+Итак, воспользуемся class instance variable, чтобы сохранить массив атрибутов, который будет иметь каждая форма:
+
+class Proform
+  def self.attributes
+    @attributes ||= []
+  end
+
+  def self.attribute(name)
+    attributes << name
+  end
+end
+
+class MyForm < Proform
+  attribute :title 
+  attribute :description
+end
+
+class FooForm < Proform
+  attribute :foo
+end
+
+MyForm.attributes # => [:title, :description]
+FooForm.attributes #=> [:foo]
+Все сработало отлично, и теперь каждый класс формы знает о своих атрибутах. Атрибуты разных форм никак не пересекаются и мы можем двигаться дальше!
+
+Добавить еще один макрос для валидации теперь совсем просто:
+
+class Proform
+  def self.attributes
+    @attributes ||= []
+  end
+
+  def self.validations
+    @validations ||= {}
+  end
+
+  def self.attribute(name)
+    attributes << name
+  end
+
+  def self.validates(attr, params)
+    validations[attr] = params
+  end
+end
+Добавили два метода: self.validations, который возвращает хеш валидаций формы, а также непосредственно сам макрос: self.validates(attr, params).
+
+Благодаря этим class macros, наш класс формы приобретает более интересный вид:
+
+class MyForm < Proform
+  attribute :title 
+  validates :title, presence: true
+end
+
+MyForm.attributes # => [:title]
+MyForm.validations #=> {:title=>{:presence=>true}}
+Теперь мы можем указывать атрибуты, которые будет обрабатывать форма и валидации, которые применяются к атрибутам.
+
+Далее дело за малым, добавить методы: #errors, #valid?, #validate(params) и #apply.
+
+Изначально мы упомянули, что при создании формы будем принимать модель, к которой эта форма привязана. Добавим в класс Proform метод initialize, а также напишем имплементацию метода valid?. Она будет тривиальной, так как валидна форма или нет - определяет наличие ошибок в хеше errors:
+
+class Proform
+  def self.attributes
+    @attributes ||= []
+  end
+
+  def self.validations
+    @validations ||= {}
+  end
+
+  def self.attribute(name)
+    attributes << name
+  end
+
+  def self.validates(attr, params)
+    validations[attr] = params
+  end
+
+  attr_reader :model, :errors
+
+  def initialize(model)
+    @model = model
+    @errors = Hash.new { |h, k| h[k] = [] } 
+  end
+
+  def valid?
+    errors.empty?
+  end
+end
+Если вам интересно, почему дефолтные значения для хеша выглядят столь громоздко, об этом можно почитать здесь. Основная идея в том, что для любого нового key такого хеша - value будет пустым массивом.
+
+Предпоследним, но наиболее трудоемким будет написание метода validate(params). Как и договаривались, пока что мы будем поддерживать только один тип валидации: { presence: true }, который просто проверит что параметр все-таки был передан. Имплементация будет немного некрасивой, но достаточной для того, чтобы сделать валидацию рабочей:
+
+def validate(params)
+  @params = params.keep_if { |attr| self.class.attributes.include?(attr) }
+
+  self.class.validations.each do |attr, validations|
+    validations.each do |type, value|
+      if type == :presence && value == true
+        errors[attr] << "can't be blank" unless params[attr]
+      end
+    end  
+  end
+
+  valid?
+end
+Рассмотрим этот метод более подробно:
+
+@params = params.keep_if { |attr| self.class.attributes.include?(attr) }
+Здесь мы фильтруем параметры. Отсеиваем те, которые мы не указали как attribute для формы. Заметьте, что с instance method'a мы получаем доступ к атрибутам формы через self.class.attributes.
+
+Далее, проходим по всем указанным валидациям и проверяем каждый параметр на те валидации, которые указали используя validates.
+
+Как и говорил, пока что это базовая валидация на присутствие атрибута:
+
+if type == :presence && value == true
+  errors[attr] << "can't be blank" unless params[attr]
+end
+Безусловно, валидации нужно выносить в отдельный модуль, а не делать проверки прямо в цикле. Но это выходит за рамки простого примера.
+
+Последний метод, который осталось написать - это метод #apply, который присвоит все валидные параметры модели. Он весьма прост:
+
+def apply
+  return false unless valid?
+  return true unless params
+
+  params.each {|attr, val| model.public_send("#{attr}=", val)}
+end
+Мы ничего не делаем если у нас нет параметров и просто возвращаем true. Также мы возвращаем false если параметры невалидны.
+
+Ели же все хорошо, мы проходим по всем валидным параметрам, и присваиваем их значение модели.
+
+В конце хочу показать весь код, который мы сегодня написали:
+
+class Proform
+  def self.attributes
+    @attributes ||= []
+  end
+
+  def self.validations
+    @validations ||= {}
+  end
+
+  def self.attribute(name)
+    attributes << name
+  end
+
+  def self.validates(attr, params)
+    validations[attr] = params
+  end
+
+  attr_reader :model, :errors, :params
+
+  def initialize(model)
+    @model = model
+    @errors = Hash.new { |h, k| h[k] = [] } 
+  end
+
+  def validate(params)
+    @params = params.keep_if { |attr| self.class.attributes.include?(attr) }
+
+    self.class.validations.each do |attr, validations|
+      validations.each do |type, value|
+        if type == :presence && value == true
+          errors[attr] << "can't be blank" unless params[attr]
+        end
+      end  
+    end
+
+    valid?
+  end
+
+  def valid?
+    errors.empty?
+  end
+
+  def apply
+    return false unless valid?
+    return true unless params
+
+    params.each {|attr, val| model.public_send("#{attr}=", val)}
+  end
+end
+
+class MyForm < Proform
+  attribute :title 
+  attribute :description
+
+  validates :title, presence: true
+end
+Дальше покажу примеры, как мы можем использовать наш класс MyForm. Рассмотрим два кейса - с валидными и невалидными параметрами:
+
+Product = Struct.new(:title, :description)
+model = Product.new('RubyBlog', 'Description') 
+# => #<struct Product title="RubyBlog", description="Description">
+
+form = MyForm.new(model)
+form.validate(description: 'Test') # => false
+form.errors # => {:title=>["can't be blank"]}
+form.apply # => false
+model # => #<struct Product title="RubyBlog", description="Description">
+
+form = MyForm.new(model)
+form.validate(title: 'http://rubyblog.com.ua', description: 'Blog about Ruby') # => true
+form.valid? # => true
+form.errors # => {}
+form.apply # {:title=>"http://rubyblog.com.ua", :description=>"Blog about Ruby"}
+model # =>  #<struct Product title="http://rubyblog.com.ua", description="Blog about Ruby">
+Для большего понимания происходящего добавил результат выполнения каждой строки в комментарий.
+
+Статья получилась огромной, но, надеюсь, интересной. Часто, когда мы видим подобные class macros - думаем, что за ними таится какая-то магия и нужны нереальные знания, чтобы писать подобные штуки. На самом деле магии никакой нет, но определенные знания нужны. Написать свой небольшой gem с таким макросом не составляет труда.
+
+Буду очень благодарен, если напишете свое мнение о данной статье в комментариях или поделитесь ссылкой с друзьями. Также, обязательно напишите, если у вас есть альтернативная имплементация данной задачи. Всегда приятно обсуждать подобные темы с коллегами.
+
+Ну, а для тех кто все еще думает о class instance variables, но каким-то чудом дочитал до последнего абзаца - еще раз настоятельно порекомендую прочитать Metaprogramming Ruby. Эту книгу я перечитываю сейчас третий раз и каждый раз нахожу для себя что-то интересное.
