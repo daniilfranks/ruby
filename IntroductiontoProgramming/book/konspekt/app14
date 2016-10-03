@@ -1,0 +1,73 @@
+Все, наверное, слышали о проблеме с N+1 query. Об этом пишут даже в официальной документации и практически в любой книге по Rails.
+
+Но, так, как мы привыкли, что ActiveRecord делает всю грязную работу за нас, мы особо не задумываемся каков будет SQL код и сколько запросов к БД мы отправим.
+
+Давайте еще раз разберемся, что означает проблема N+1 query. Как обычно предлагаю рассмотреть на примере.
+
+У нас есть блог с моделями: Post, Category, CategoryPost.
+
+class Post < ActiveRecord::Base
+  has_many :category_posts, dependent: :destroy
+  has_many :categories, through: :category_posts
+end
+
+class Category < ActiveRecord::Base
+  has_many :category_posts, dependent: :destroy
+  has_many :posts, through: :category_posts
+end
+
+class CategoryPost < ActiveRecord::Base
+  belongs_to :category
+  belongs_to :post
+end
+Все стандартно: связь many-to-many. Пост может иметь много категорий, так же как и категории могут иметь много постов. Это решается через промежуточную модель CategoryPost.
+
+Благодаря таким связям между моделями, мы очень легко можем получить доступ к категориям поста: post.categories. Если посмотреть на то, какой SQL при этом генерируется, увидим:
+
+SELECT `categories`.* FROM `categories` INNER JOIN `category_posts` ON `categories`.`id` = `category_posts`.`category_id` WHERE `category_posts`.`post_id` = 10
+Теперь рассмотрим стандартную штуку - главную страницу блога, на которой отображаем 10 последних постов. Контроллер выглядит стандартно:
+
+class PostsController < ApplicationController
+  def index
+    @posts = Post.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+  end
+end
+А во view мы выводим список категорий с ссылками для каждого поста:
+
+<% @posts.each do |post| %>
+  ...
+  <% post.categories.each do |category| %>
+    <%=link_to category.title, category_path(category.slug) %>
+  <% end %>
+  ...
+<% end %>
+Как же это просто, благодаря ActiveRecord. Хотя нет, подождите, давайте посмотрим какие запросы мы отправляем к БД:
+
+N+1 query
+
+Выглядит ужасно. Имеем по одному запросу с LEFT JOIN для каждого поста. Будь у нас 100 постов - было бы 100 запросов к таблице категорий. В этом и заключается суть проблемы N+1 query.
+
+Rails имеет простое решение для такой проблемы - используйте includes при выборке. Если вы знаете, что вам точно понадобятся категории для каждого поста - укажите includes(:categories) и Rails оптимизирует запросы для вас автоматически.
+
+Меняем код контроллера:
+
+def index
+  @posts = Post.includes(:categories).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+end
+И смотрим как преобразился результат:
+
+N+1 solution
+
+Теперь мы имеем 3 запроса вне зависимости от того, сколько постов выводим! Сначала мы выбираем посты, затем для них category_posts, и только после этого, зная какие категории выбрать, выбираем categories.
+
+Всегда следите за логом Rails и за тем, сколько запросов отправляет ваше приложение. Используйте includes для решения проблем с N+1 query. Он достаточно умен, чтобы оптимизировать запросы следуя подходу "жадной загрузки" (eager loading) - вытащить необходимые данные с минимальным количеством запросов к БД.
+
+Хочу добавить несколько ссылок, которые будут очень полезны в изучении данного вопроса:
+
+Документация . Если что-то неясно, попытайтесь найти ответ в документации.
+
+Если путаетесь в LEFT JOIN и INNER JOIN - советую добавить в закладки эту страницу с красивым описанием работы JOIN'ов в MySQL.
+
+Для того, чтобы отследить N+1 в приложении, некоторые команды используют gem'ы. Например bullet gem.
+
+Если читаете на английском, вот еще хорошая статья, которая описывает разницу между includes, preload и eager_load. С preload и eager_load тоже рекомендую разобраться, чтобы знать где их лучше использовать.
