@@ -1,0 +1,144 @@
+#http://rubyblog.com.ua
+
+Посмотрим, что говорит об этом шаблоне википедия:
+
+Декоратор (англ. Decorator) — структурный шаблон проектирования, предназначенный для динамического подключения дополнительного поведения к объекту.
+
+Да, на первый взгляд выглядит весьма непонятно. Но, на самом деле это довольно несложный для понимания шаблон, который мы, как обычно, разберем на очень простом примере.
+
+Представим, что у нас есть класс User c атрибутами first_name и last_name:
+
+class User
+  attr_reader :first_name, :last_name
+
+  def initialize(first_name, last_name)
+    @first_name = first_name
+    @last_name = last_name
+  end
+end
+Если вы пишете веб-приложение на любом MVC-фреймворке, то, наверняка, где-то во View вам придется вывести информацию об этом пользователе. Например, мы хотим вывести full_name для этого пользователя, которое будет состоять из first_name и last_name.
+
+Первый и очевидный способ - добавить метод full_name прямо в модель. Проблема такого подхода в том, что со временем модель данных начинает содержать слишком много кода, который относится больше к репрезентации данных, нежели к самой модели данных.
+
+На помощь в такой ситуации приходит шаблон декоратор. Рассмотрим пример:
+
+class DecoratedUser
+  attr_reader :user
+
+  def initialize(user)
+    @user = user
+  end
+
+  def full_name
+    "#{user.first_name} #{user.last_name}"
+  end
+end
+
+u = User.new("John", "Doe")
+decorated_user = DecoratedUser.new(u)
+
+decorated_user.full_name # => John Doe
+Итак, мы написали класс, который в момент инициализации принимает экземпляр класса User. Также, мы добавили метод full_name который работает так, как мы и ожидали - выводит имя и фамилию пользователя.
+
+Все бы хорошо, но определение паттерна декоратор говорит о том, что мы должны расширить возможности обьекта, а значит нужно сохранить его базовое поведение.
+
+В данном случае DecoratedUser отвечает на full_name, но не имеет методов first_name и last_name которые есть у User.
+
+decorated_user.first_name # => NoMethodError
+Если правильно реализовать паттерн decorator, мы должны получить следующий результат:
+
+decorated_user.full_name # => John Doe
+decorated_user.first_name # => John
+decorated_user.last_name # => Doe
+DecoratedUser должен сохранять поведение класса User и добавлять ему новые возможности.
+
+Для решения этой задачи можно воспользоваться модулем Ruby Forwardable. Он позволяет передавать вызовы указанных методов обьекту внутри класса. Снова звучит сложновато, но пример прояснит ситуацию:
+
+require 'forwardable'
+
+class DecoratedUser
+  extend Forwardable
+
+  def_delegators :@user, :first_name, :last_name
+
+  def initialize(user)
+    @user = user
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+end
+
+u = User.new("John", "Doe")
+decorated_user = DecoratedUser.new(u)
+
+decorated_user.full_name # => John Doe
+decorated_user.first_name # => John
+decorated_user.last_name # => Doe
+Мы подключаем модуль forwardable, который позволяет определить набор методов, которые автоматически будут перенаправлены на указанный обьект, в нашем случае это:
+
+def_delegators :@user, :first_name, :last_name
+Таким образом, мы указываем, что при вызове decorated_user.first_name мы хотим перенаправить метод first_name на @user.first_name.
+
+Если посмотреть на код и на результат его выполнения - все отлично. DecoratedUser сохраняет базовое поведение класса User, плюс расширяет его новым методом. Но в нашей реализации с использованием forwardable есть одна проблема - каждый раз, когда вы добавляете новый метод в класс User, вам нужно не забыть добавить его в def_delegators для DecoratedUser, иначе вы не сможете его использовать в декораторе.
+
+Модуль Forwardable, безусловно, полезен и есть случаи когда его стоит использовать, но для данного случая есть более простой способ - использовать класс SimpleDelegator
+
+Давайте посмотрим как выглядит код, если мы унаследуем DecoratedUser от SimpleDelegator:
+
+require 'delegate'
+class DecoratedUser < SimpleDelegator
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+end
+
+u = User.new("John", "Doe")
+decorated_user = DecoratedUser.new(u)
+
+decorated_user.full_name # => John Doe
+decorated_user.first_name # => John
+decorated_user.last_name # => Doe
+Выглядит гораздо лаконичнее и работает как следует! При вызове метода - Ruby ищет его в текущем классе (в нашем случае DecoratedUser), а если не находит - то смотрит в класс, экземпляр которого мы передали при создании декоратора (User).
+
+Например, если вы используете Rails, то код контроллера может выглядеть так:
+
+def show
+  user = User.find(params[:id])
+  @decorated_user = DecoratedUser.new(user)
+end
+И во View вы можете пользоваться всеми плюсами декоратора: вызывать как метод full_name, так и first_name и last_name.
+
+Если мы решим добавить пользователю атрибут city, вы можете расширить декоратор и использовать его для вывода, например, красивого приветствия:
+
+require 'delegate'
+
+class User
+  attr_reader :first_name, :last_name, :city
+
+  def initialize(first_name, last_name, city)
+    @first_name = first_name
+    @last_name = last_name
+    @city = city
+  end
+end
+
+class DecoratedUser < SimpleDelegator
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def greeting
+    "Hi, I'm #{first_name}! I live in #{city}"
+  end
+end
+
+u = User.new("John", "Doe", "London")
+decorated_user = DecoratedUser.new(u)
+
+puts decorated_user.greeting
+# => Hi, I'm John! I live in London
+Подводя итоги: декоратор будет полезен, если вам нужно сохранить поведение базового класса и расширить его по мере необходимости дополнительными возможностями.
+
+Очень рекомендую попробовать применить данный паттерн на практике! Для Rails-приложений популярным решением является gem draper, который как раз и реализует decorator pattern.
