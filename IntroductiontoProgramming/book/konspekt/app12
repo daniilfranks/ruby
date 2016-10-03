@@ -1,0 +1,210 @@
+#http://rubyblog.com.ua
+В этой заметке хочу на реальном примере рассмотреть применение такого паттерна (шаблона проектирования), как template.
+
+Пример решил взять самый простой, но он с очень большой долей вероятности встретится в реальных проектах.
+
+Итак, начнем с небольшого описания того, что мы делаем. Мы пишем систему, которая будет сотрудничать со сторонними сервисами. Мы будем генерировать файлы с данными о пользователе, система будет их забирать и возвращать результат. У нас есть класс User, который имеет: имя, фамилию и email.
+
+class User
+  attr_reader :first_name, :last_name, :email
+
+  def initialize(first_name, last_name, email)
+    @first_name = first_name
+    @last_name  = last_name
+    @email      = email
+  end
+end
+Наша задача уметь генерировать файлы для сторонних сервисов в указанном формате. Важно то, что каждый сторонний сервис имеет свой формат файла, который мы должны сгенерировать.
+
+Представим, что сначала мы сотрудничаем с двумя сервисами: Froogle и Gamazon.
+
+Froogle от нас ожидает файл в таком формате:
+
+---current_time---
+first_name|last_name|email
+------
+А Gamazon хочет, чтобы first_name и last_name были одним полем, а данные между полями разделялись запятыми:
+
+---current_time---
+first_name last_name,email
+------
+Сразу можно заметить, что файлы, которые нам нужно сгенерировать имеют одинаковые первую (---current_time---) и последнюю строки (------).
+
+Давайте напишем самое очевидное решение:
+
+class FroogleFileGenerator
+  attr_reader :user
+
+  def initialize(user)
+    @user = user
+  end
+
+  def generate
+    File.write('froogle.csv', content)
+  end
+
+  private
+
+  def header
+    "---#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}---"
+  end
+
+  def body
+    [user.first_name, user.last_name, user.email].join('|')
+  end
+
+  def footer
+    '------'
+  end
+
+  def content
+    [header, body, footer].join("\n")
+  end
+
+end
+
+class GamazonFileGenerator
+  attr_reader :user
+
+  def initialize(user)
+    @user = user
+  end
+
+  def generate
+    File.write('gamazon.csv', content)
+  end
+
+  private
+
+  def header
+    "---#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}---"
+  end
+
+  def body
+    ["#{user.first_name} #{user.last_name}", user.email].join(",")
+  end
+
+  def footer
+    '------'
+  end
+
+  def content
+    [header, body, footer].join("\n")
+  end
+
+end
+
+user = User.new("John", "Doe", "john@doe.com")
+FroogleFileGenerator.new(user).generate
+GamazonFileGenerator.new(user).generate
+Этот код работает и мы получили правильно сгенерированные файлы.
+
+Но, как вы уже наверное заметили, в этом коде слишком много дублирования. Каждый класс принимает обьект user и имеет методы: generate, header, footer, body, content.
+
+По сути, все что нам нужно - это уникальная имплементация метода body. Остальные части файла генерируются по одному и тому же шаблону. Что наталкивает на мысль о том, что мы можем применить паттерн template.
+
+Давайте на примере рассмотрим, в чем идея паттерна template. Мы применим наследование и вынесем всю общую логику в родительский класс BasicFileGenerator:
+
+class BasicFileGenerator
+  attr_reader :user, :file_name
+
+  def initialize(user, file_name)
+    @user = user
+    @file_name = file_name
+  end
+
+  def generate
+    File.write(file_name, content)
+  end
+
+  private
+
+  def header
+    "---#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}---"
+  end
+
+  def body
+    raise NotImplementedError
+  end
+
+  def footer
+    '------'
+  end
+
+  def content
+    [header, body, footer].join("\n")
+  end
+end
+
+class FroogleFileGenerator < BasicFileGenerator
+  private
+
+  def body
+    [user.first_name, user.last_name, user.email].join('|')
+  end
+end
+
+class GamazonFileGenerator < BasicFileGenerator
+  private
+
+  def body 
+    ["#{user.first_name} #{user.last_name}", user.email].join(",")
+  end
+end
+Выглядит намного лучше. Рассмотрим, что мы имеем: класс BasicFileGenerator, а именно его метод content реализует логику генерации файла. Он обьединяет все составные части: header, body и footer. Так, как header и footer у нас совпадают - мы вынесли их в BasicFileGenerator. А метод body каждый генератор должен имплементировать. Если генератор не имплементировал метод body, этот колл попадает в BasicFileGenerator#body и выбрасывает ошибку NotImplementedError.
+
+Теперь добавлять новые генераторы стало гораздо проще: наследуем класс от BasicFileGenerator, пишем имплементацию body, а дальше все генерируется по шаблону.
+
+Это самый простой пример работы с паттерном template, который позволяет писать меньше кода и избегать дублирования логики. Выносить все общие шаги генерации шаблона в базовый класс, а всю кастомную логику хранить в соответствующих дочерних классах.
+
+Конкретно в этом случае наследование нам идеально подходит. Генераторы имеют очень много общего. Но с наследованием нужно быть очень осторожным, так как очень легко упустить момент, когда оно играет скорее отрицательную роль в дизайне.
+
+Мы рассмотрели идеальные условия для применения паттерна, но давайте рассмотрим, еще одну ситуацию.
+
+Итак, мы сделали хорошую работу. Наш код выглядит хорошо и работает правильно. Но все было бы хорошо, если бы мы не начали сотрудничать с компанией Switter, которой помимо данных о пользователе, необходимо передавать последней строкой мета-данные о запросе. Давайте назовем эти поля request_priority и request_type.
+
+Очевидно, что данные о запросе не относятся к пользователю напрямую, поэтому добавлять их в класс User не имеет никакого смысла. Нужно вынести эти данные в класс Request (слишком общее название для класса, но для простого примера будем использовать именно его):
+
+class Request
+  attr_reader :type, :priority
+
+  def initialize(type, priority)
+    @type = type
+    @priority = priority
+  end
+end
+Это очень простая структура данных, которую можно было бы и заменить на Struct. Но пусть будет отдельный класс.
+
+Итак, имея класс Request и User, пишем SwitterFileGenerator:
+
+class SwitterFileGenerator < BasicFileGenerator  
+  attr_reader :request
+
+  def initialize(user, file_name, request)
+    @request = request
+    super(user, file_name)
+  end
+
+  private
+
+  def body
+    [user.first_name, user.last_name, user.email].join(",")
+  end
+
+  def footer
+    "---#{request.type}---#{request.priority}---"
+  end
+end
+Этот код выглядит неплохо и работает предсказуемо, но что-то с этим кодом не так. Мы все еще используем наследование от BasicFileGenerator, но уже вынуждены переопределять initialize, так как теперь нужно принимать и обрабатывать request. Кроме того, в данном случае пришлось переопределить и footer.
+
+В этом и есть основная проблема наследования. Со временем, незаметно, классы разрастаются переопределенными методами и становится совсем непонятно, стоит ли еще наследоваться от базового класса или пора рефакторить все что имеется. И, чаще всего, чтобы ничего не сломать, разработчики продолжают наследовать свои классы от базового.
+
+В данном случае, я бы оставил текущую реализацию как есть. Но, в случае подключения к еще одному сервису, которому нужно больше данных чем те, что имеются в User - переписал бы код используя другой подход, нежели template pattern.
+
+Теперь выводы: используйте данный подход если ваш код действительно делает одну и ту же работу по шаблону. Сначала a, потом b, потом c. В данном случае выносим всю последовательность в базовый класс, а кастомную реализацию некоторых методов в дочерние классы. Удобно.
+
+Но, обязательно, при добавлении каждого следующего класса, следите: соответствует ли он еще той логике, которая заложена в базовый класс? как много методов или дополнительных параметров передаем? с какими данными работаем?
+
+Если упустить этот момент - наследование сделает медвежью услугу и только усложнит ваш код.
+
+Если интересно почитать о паттернах в Ruby - есть отличная книга: «Design Patterns in Ruby» — Russ Olsen, рекомендую.
