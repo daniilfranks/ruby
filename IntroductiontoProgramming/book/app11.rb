@@ -28,3 +28,4 @@ end
 
 u = User.new
 u.say_secret_with_self # => "secret"
+
