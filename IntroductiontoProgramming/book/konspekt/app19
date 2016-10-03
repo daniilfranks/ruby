@@ -1,0 +1,216 @@
+Если перевести Factory Method на русский язык - получаем "Фабричный метод", и вот что о нем говорит википедия:
+
+порождающий шаблон проектирования, предоставляющий подклассам интерфейс для создания экземпляров некоторого класса. В момент создания наследники могут определить, какой класс создавать. [...] Это позволяет использовать в коде программы не специфические классы, а манипулировать абстрактными объектами на более высоком уровне.
+
+Из этого описания понятно как минимум то, что это порождающий шаблон - следовательно, используя его мы сможем создавать экземпляры классов. Также видно то, что благодаря этому паттерну нам не нужно явно указывать экземпляры каких классов мы хотим создавать, а вместо этого мы будем оперировать более абстрактными терминами.
+
+Перейдем сразу к примеру, чтобы было понятно о чем идет речь. Пример будет похож на тот, который мы рассматривали в статье о dependency injection.
+
+Наша задача разработать генератор отчетов, который будет легко поддерживать различные форматы. Мы знаем, что сначала он должен поддерживать как минимум два: csv и json.
+
+Сегодня хочу пошагово показать как от решения "в лоб" перейти к более гибкому и красивому решению и в конце применить Factory Method pattern.
+
+Итак, самое некрасивое и прямолинейное решение:
+
+class ReportGenerator
+  def self.generate(data, type)
+    return "" if (data.empty? || !['csv', 'json'].include?(type))
+
+    if type == 'csv'
+      result = data.keys.join(",") + "\n"
+      result += data.values.join(",") + "\n"      
+    elsif type == 'json'
+      result = data.to_json
+    end
+
+    result
+  end
+end
+
+report_data = { foo_key: "foo", bar_key: "bar", baz_key: "baz" }
+
+ReportGenerator.generate(report_data, 'json') # => {"foo_key":"foo","bar_key":"bar","baz_key":"baz"}
+ReportGenerator.generate(report_data, 'csv') 
+# => foo_key,bar_key,baz_key
+# => foo,bar,baz
+Чтобы понять как написать код более гибко, нужно понимать чем плохо текущее решение. Да, этот код работает, но у класса ReportGenerator есть как минимум несколько проблем:
+
+Он нарушает принцип Single Responsibility, так как он отвечает сразу за несколько вещей: он определяет как форматировать данные и форматирует данные на основе типа как для json, так и для csv
+Участки кода с if type == 'csv' и elsif type == 'json' выглядят ужасно и весь код подобен на ракету из-за вложенностей. Хороший код всегда имеет плоскую структуру.
+В классе в двух местах явно указаны csv и json (в if...elsif и в начале метода при проверке допустимого типа). Это означает то, что если мы захотим добавить новый формат - придется добавлять его в двух местах.
+Представим, что нам нужно добавить еще один формат - tsv (tab separated value). В этом случае класс становится еще более сложным и некрасивым:
+
+class ReportGenerator
+  def self.generate(data, type)
+    return "" if (data.empty? || !['csv', 'tsv', 'json'].include?(type))
+
+    if type == 'csv'
+      result = data.keys.join(",") + "\n"
+      result += data.values.join(",") + "\n"
+    elsif type == 'tsv'
+      result = data.keys.join("\t") + "\n"
+      result += data.values.join("\t") + "\n"          
+    elsif type == 'json'
+      result = data.to_json
+    end
+
+    result
+  end
+end
+Теперь, когда проблемы стали очевидны, сделаем первый логичный шаг и вынесем форматирование данных в отдельные классы:
+
+class CsvFormatter
+  def format(data)
+    return "" if data.empty?
+
+    result = data.keys.join(",") + "\n"
+    result += data.values.join(",") + "\n"
+  end        
+end
+
+class JsonFormatter
+  def format(data)
+    return "" if data.empty?
+
+    data.to_json
+  end
+end
+Теперь у нас есть два класса-форматтера, которые имеют одинаковый интерфейс - отвечают на format(data).
+
+Если воспользоваться этими классами, наш генератор может избавиться от одной из своих ответственностей, так как он уже не будет отвечать за форматирование данных:
+
+class ReportGenerator
+  def self.generate(data, type)
+    return "" if (data.empty? || !['csv', 'json'].include?(type))
+
+    if type == 'csv'
+      result = CsvFormatter.new.format(data)
+    elsif type == 'json'
+      result = JsonFormatter.new.format(data)
+    end
+
+    result
+  end
+end
+Этот код выглядит лучше, но он еще не идеален, так как класс продолжает отвечать за определение типа отчета и содержит эти некрасивые вложенности с if ... elsif.
+
+Пришло время использовать Factory Method, который будет отвечать за то, чтобы создавать экземпляр класса, который форматирует данные.
+
+Рассмотрим как он может выглядеть:
+
+class Formatter
+  def self.for(type)
+    case type
+    when 'csv'
+      CsvFormatter.new
+    when 'json'
+      JsonFormatter.new
+    else
+      raise 'Unsupported type of report'
+    end
+  end
+end
+Используя Formatter.for('json') мы можем легко получить экземпляр класса JsonFormatter и вызвать у него .format(data) чтобы получить отформатированные данные. Если вызовем Formatter.for('csv') получим экземпляр класса CsvFormatter. Заметим, что оба этих класса имеют одинаковый интерфейс, а именно отвечают на метод .format(data).
+
+Теперь соберем все части вместе, воспользуемся Formatter.for в ReportGenerator и посмотрим насколько красивее стал наш код:
+
+class CsvFormatter
+  def format(data)
+    return "" if data.empty?
+
+    result = data.keys.join(",") + "\n"
+    result += data.values.join(",") + "\n"
+  end        
+end
+
+class JsonFormatter
+  def format(data)
+    return "" if data.empty?
+
+    data.to_json
+  end
+end
+
+class Formatter
+  def self.for(type)
+    case type
+    when 'csv'
+      CsvFormatter.new
+    when 'json'
+      JsonFormatter.new
+    else
+      raise 'Unsupported type of report'
+    end
+  end
+end
+
+class ReportGenerator
+  def self.generate(data, type)
+    Formatter.for(type).format(data)
+  end
+end
+
+report_data = { foo_key: "foo", bar_key: "bar", baz_key: "baz" }
+ReportGenerator.generate(report_data, 'json') # => {"foo_key":"foo","bar_key":"bar","baz_key":"baz"}
+Этот код делает абсолютно то же самое, что и первоначальное решение, но давайте рассмотрим плюсы, которые мы получаем:
+
+Теперь класс ReportGenerator отвечает только за одно действие - он генерирует отчет на основе данных и формата, который принимает.
+Класс Formatter, а точнее его метод for - это фабрика, которая возвращает форматтер для переданного типа (csv или json).
+Благодаря тому, что все форматтеры отвечают на .format(data), мы спокойно вызываем Formatter.for(type).format(data). Нас не интересует в каком формате мы генерируем отчет, он все-равно отработает. Этот метод - типичная команда, которую мы отправляем классу.
+Нет никаких вложенностей и if..else. Код имеет плоскую структуру
+Если возникнет задача добавить еще один формат, мы легко это сделаем: создадим новый класс форматтера и добавим его в фабрику:
+
+class CsvFormatter
+  def format(data)
+    return "" if data.empty?
+
+    result = data.keys.join(",") + "\n"
+    result += data.values.join(",") + "\n"
+  end        
+end
+
+class JsonFormatter
+  def format(data)
+    return "" if data.empty?
+
+    data.to_json
+  end
+end
+
+class TsvFormatter
+  def format(data)
+    return "" if data.empty?
+
+    result = data.keys.join("\t") + "\n"
+    result += data.values.join("\t") + "\n"
+  end
+end
+
+class Formatter
+  def self.for(type)
+    case type
+    when 'csv'
+      CsvFormatter.new
+    when 'json'
+      JsonFormatter.new
+    when 'tsv'
+      TsvFormatter.new
+    else
+      raise 'Unsupported type of report'
+    end
+  end
+end
+
+class ReportGenerator
+  def self.generate(data, type)
+    Formatter.for(type).format(data)
+  end
+end
+
+report_data = { foo_key: "foo", bar_key: "bar", baz_key: "baz" }
+ReportGenerator.generate(report_data, 'tsv')
+Заметьте, мы не изменили ни строчки кода в ReportGenerator'е, но он получил поддержку нового формата - tsv. Это отлично вписывается в один из пяти SOLID принципов ООП - Принцип открытости/закрытости. Этот принцип говорит о следующем: программные сущности (классы, модули, функции и т. п.) должны быть открыты для расширения, но закрыты для изменения. Это как раз то, что мы получили. Нам не нужно менять код класса ReportGenerator, чтобы расширить его возможности.
+
+Очень рекомендую присмотреться к паттерну Factory Method, так как он является одним из наиболее часто используемых шаблонов и позволяет делать код более гибким.
+
+На примере мы убедились, как фабрика для форматтеров позволила улучшить наш код, сделать его более логичным и расширяемым.
