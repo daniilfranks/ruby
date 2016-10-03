@@ -1,0 +1,96 @@
+В обьектно-ориентированном мире существует такой принцип: Tell Don't Ask, что переводится как: говори (что делать), а не спрашивай.
+
+Если следовать этому принципу - мы не будем спрашивать наши обьекты об их текущем состоянии, но будем говорить им что нужно сделать.
+
+Хорошие примеры приведены в этой статье. Рассмотрим первый из них:
+
+<% if current_user.admin? %>
+  <%= current_user.admin_welcome_message %>
+<% else %>
+  <%= current_user.user_welcome_message %>
+<% end %>
+Этот код плохой. Чем он плох? В данном случае мы спрашиваем обьект current_user о его состоянии - админ ли пользователь или нет? И на основе этого делаем вывод - какой метод вызвать.
+
+Еще плохо то, что логика которая определяет какое сообщение выводить живет за пределами обьекта. Это означает, что если нам нужно вывести сообщение в нескольких местах - в каждом их них мы должны добавлять эту логику. И если со временем возникнет необходимость эту логику изменить - код придется менять во всех местах, что, к тому же, не соответствует подходу Don't Repeat Yourself (DRY).
+
+Давайте рассмотрим как выглядел бы код, если бы автор следовал принципу tell don't ask:
+
+<%= current_user.welcome_message %>
+А логику проверки - админ пользователь или нет, можно вынести в сам метод welcome_message.
+
+Давайте рассмотрим еще один пример. Сначала напишем код не следуя принципу tell don't ask:
+
+class Wallet
+
+  attr_accessor :balance
+
+  def initialize(balance)
+    @balance = balance
+  end
+
+end
+
+class PaymentService
+
+  attr_reader :wallet
+
+  def initialize(wallet)
+    @wallet = wallet
+  end
+
+  def debit(amount)
+    if wallet.balance < amount
+      raise "Not enough funds"
+    else
+      wallet.balance -= amount
+    end
+  end
+
+  def credit(amount)
+    wallet.balance += amount
+  end
+end
+В этом примере класс Wallet просто хранит значение одной переменной - balance. А вот класс PaymentService содержит всю логику и спрашивает кошелек о состоянии его баланса. И опять-таки если вы захотите снять деньги с кошелька в другой части приложения - вам придется делать проверку баланса еще раз.
+
+Если переписать пример следуя принципу Tell Don't Ask, то получим красивый код:
+
+class Wallet
+
+  attr_accessor :balance
+
+  def initialize(balance)
+    @balance = balance
+  end
+
+  def debit(amount)
+    raise "Not enogh funds" if balance < amount
+    self.balance -= amount
+  end
+
+  def credit(amount)
+    self.balance += amount
+  end
+
+end
+
+class PaymentService
+
+  attr_reader :wallet
+
+  def initialize(wallet)
+    @wallet = wallet
+  end
+
+  def debit(amount)
+    wallet.debit(amount)
+  end
+
+  def credit(amount)
+    wallet.credit(amount)
+  end
+end
+Теперь код выглядит гораздо лучше. Класс Wallet содержит в себе всю необходимую логику, а PaymentService просто говорит кошельку что нужно сделать.
+
+И если мы получим новые требования по логике работы кошелька - мы точно знаем класс в который добавим эту логику - это класс Wallet.
+
+Следуйте принципу Tell Don't Ask. Держите логику работы обьекта в рамках самого обьекта и вы получите понятный код который легко поддерживать и в который легко добавлять новую функциональность.
