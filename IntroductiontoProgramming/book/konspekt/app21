@@ -1,0 +1,257 @@
+Возьмем простой класс Man с методом hi:
+
+class Man
+  def hi
+    puts 'hi'
+  end
+end
+
+m = Man.new
+m.hi # => hi
+В этом коде нет ничего необычного. Простой метод, который возвращает 'hi'. Теперь рассмотрим такой код:
+
+class Man
+  def hi
+    puts 'hi'
+  end
+end
+
+hi_method = Man.instance_method(:hi)
+hi_method.inspect # => #<UnboundMethod: Man#hi>
+Теперь в hi_method у нас содержится метод hi класса Man. Это UnboundMethod обьект, который мы можем вызвать для любого экземпляра класса Man. Например:
+
+hi_method = Man.instance_method(:hi)
+hi_method.inspect # => #<UnboundMethod: Man#hi>
+
+m = Man.new
+
+hi_method.bind(m).call # => hi 
+Имея метод, который отвязан от класса Man, нам нужно привязать его (bind) к обьекту, а затем вызвать, воспользовавшись методом call.
+
+Повторим еще раз: имея UnbdounMethod класса Man, мы можем привязать его к какому-либо экземпляру этого же класса используя bind и вызвать посредством call.
+
+Если попробовать вызвать call у UnboundMethod не подкрепив его к обьекту через bind - получим ошибку:
+
+hi_method = Man.instance_method(:hi)
+hi_method.inspect # => #<UnboundMethod: Man#hi>
+
+hi_method.call # => undefined method `call' for #<UnboundMethod: Man#hi> 
+Так, как UnboundMethod не знает для какого обьекта вы хотите его вызвать.
+
+Как я упоминал выше, имея метод отвязанный от класса Man, вызывать его мы можем только с обьектами класса Man. Если попробовать привязать его к обьекту другого класса, получаем ошибку:
+
+class Man
+  def hi
+    puts 'hi'
+  end
+end
+
+class Woman
+end
+
+hi_method = Man.instance_method(:hi)
+
+w = Woman.new
+hi_method.bind(w).call # bind argument must be an instance of Man (TypeError)
+Метод с класса Man можно привязать только к экземплярам класса Man. Иначе получаем ошибку.
+
+Рассмотрим ситуацию, когда мы все же хотим сделать такой метод, который мы могли бы привязать к экземпляру любого класса и вызывать его. Это можно сделать, если вынести метод в модуль:
+
+module Greetable
+  def hi
+    puts 'hi'
+  end
+end
+
+class Man
+end
+
+class Woman
+end
+
+hi_method = Greetable.instance_method(:hi)
+
+w = Woman.new
+hi_method.bind(w).call # => hi
+
+m = Man.new
+hi_method.bind(m).call # => hi
+Как видим из примера - метод hi из модуля Greetable мы можем привязать к любому обьекту.
+
+Если вы дочитали до этого момента - вы герой, так как вопрос "зачем мне это все?", я уверен, не покидал вас с первого абзаца данной статьи.
+
+На самом деле знания, которые вы получили в этой и предыдущей статье позволят вам создавать очень крутые штуки. Давайте, например, напишем свой мини-фреймворк, который будет похож на Sinatra.
+
+Sinatra-like DSL
+Например, мы хотим сделать так, чтобы наш контроллер выглядел вот так:
+
+class UsersController
+  get '/' do
+    puts handler
+  end
+
+  private
+
+  def handler
+    'handling request...'
+  end
+end
+Попробуем запустить этот код:
+
+`<class:UsersController>': undefined method `get' for UsersController:Class (NoMethodError)
+Результат более чем логичен, Ruby выполняет код внутри класса сразу и пытается найти метод класса get.
+
+Создадим базовый класс BaseController в которий добавим класс-метод get.
+
+Когда мы говорили о том, как создавать class macros, мы решили что будем использовать инстанс-переменные класса. Если вы не читали эту статью, обязательно прочтите чтобы понять следующий код:
+
+class BaseController 
+  def self.actions
+    @actions ||= { get: {} }
+  end
+
+  def self.get(path, &block)
+    actions[:get][path] = block
+  end
+end
+Итак, имеем базовый контроллер с двумя методами класса: get и actions. Идея в том, чтобы сохранять в инстанс-переменную класса путь, который мы хотим обработать (например '/') и блок кода, который мы хотим выполнить. В случае с UsersController это:
+
+  get '/' do
+    handler
+  end
+Метод get класса BaseController сохранит в инстанс-переменной actions класса UsersController хеш вида:
+
+actions[:get]['/'] => block of code you passed (`puts handler`)
+Добавим в BaseController метод call, который мы хотим вызывать передав путь:
+
+class BaseController 
+  def self.actions
+    @actions ||= { get: {} }
+  end
+
+  def self.get(path, &block)
+    actions[:get][path] = block
+  end
+
+  def call(path)
+    self.class.actions[:get][path].call
+  end
+end
+Мы планируем вызывать обработку нашего запроса вот так: UsersController.new.call('/'). Что должно вызвать блок, который мы передали, а блок, в свою очередь должен вернуть строку handling request.
+
+В методе call нет ничего необычного. Он идет в метод класса actions, который хранит связь '/' => block of code, находит его и вызывает.
+
+Ниже приведу весь код который имеем на данный момент:
+
+class BaseController 
+  def self.actions
+    @actions ||= { get: {} }
+  end
+
+  def self.get(path, &block)
+    actions[:get][path] = block
+  end
+
+  def call(path)
+    self.class.actions[:get][path].call
+  end
+end
+
+class UsersController < BaseController
+  get '/' do
+    puts handler
+  end
+
+  private
+
+  def handler
+    'handling request...'
+  end
+end
+
+UsersController.new.call('/')
+Казалось бы, мы все учли и у нас все есть, чтобы запустить наш код и обработать гипотетический реквест. Но, этот код возвращает ошибку:
+
+undefined local variable or method `handler' for UsersController:Class
+Блок кода мы сохранили и при вызове метода call правильно нашли его. Но, при выполнении получаем ошибку. Если обратить внимание на то, где блок пытается найти метод handler, увидим, что он пытается это сделать в области видимости класса, а не обьекта.
+
+Давайте попробуем разобраться почему так происходит. Мы определяем блок для метода get, который является методом класса. Следовательно и область видимости блока - это методы класса. Он ничего не знает о инстанс-методе handler. Это и приводит к ошибке.
+
+А это значит, что нам нужно каким-то образом блок, который был определен в скоупе метода класса, выполнить в скоупе обьекта, чтобы метод handler, был доступен.
+
+Если вы дочитали и до этой части статьи - вы уже супергерой) А супергероям положено получать самое лучшее. Так, как мы воспользуемся UnboundMethod'ом для решения столь сложной задачи.
+
+Итак, повторим проблему еще раз: блок был определен в методе класса, но запустить его нужно в скоупе экземпляра класса.
+
+Мы поступим следующим образом: мы конвертируем блок в инстанс-метод, получим UnboundMethod и сохраним его в actions для дальнейшего выполнения.
+
+Рассмотрим код:
+
+class BaseController
+  # ...
+  def self.get(path, &block)
+    actions[:get][path] = block_to_unbound_method(block)
+  end
+  # ...
+  private
+
+  def self.block_to_unbound_method(block)
+    define_method :temp, block
+    method = instance_method(:temp)
+    remove_method(:temp)
+
+    method
+  end
+Главное спокойствие, никакой магии здесь нет :) Имея блок, мы можем определить метод, телом которого он будет являться. Но мы не хотим, чтобы этот временный метод жил в UsersController, потому мы его определили как temp, затем воспользовались instance_method и получили UnboundMethod и успешно удалили метод temp. Этот UnboundMethod мы сохраняем в хеш actions. Заметим, что теперь это инстанс-метод!
+
+Метод call теперь можно переписать так, чтобы он пользовался вновь созданным UnboundMethod:
+
+  def call(path)
+    action = self.class.actions[:get][path]
+
+    action.bind(self).call
+  end
+Мы находим UnboundMethod в хеше actions, подкрепляем его к текущему обьекту и выполняем. Теперь все работает, так как UnboundMethod который мы определили, видит инстанс-метод handler.
+
+Посмотрим на итоговый код, который у нас получился:
+
+class BaseController 
+  def self.actions
+    @actions ||= { get: {} }
+  end
+
+  def self.get(path, &block)
+    actions[:get][path] = block_to_unbound_method(block)
+  end
+
+  def call(path)
+    action = self.class.actions[:get][path]
+
+    action.bind(self).call
+  end
+
+  private
+
+  def self.block_to_unbound_method(block)
+    define_method :temp, block
+    method = instance_method(:temp)
+    remove_method(:temp)
+
+    method
+  end
+end
+
+class UsersController < BaseController
+  get '/' do
+    handler
+  end
+
+  private
+
+  def handler
+    'handling request...'
+  end
+end
+
+UsersController.new.call('/') # => handling request...
+Основную сложность в понимании здесь могут вызвать два момента: instance-variables класса, которыми мы воспользовались для сохранения хеша с методами и путями. Вторая сложная часть заключается в превращении блока в UnboundMethod. Этот код требует понимания обьектной модели Ruby, но если с ним разобраться - вся магия исчезает.
