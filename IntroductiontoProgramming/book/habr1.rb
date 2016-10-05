@@ -57,6 +57,3 @@ puts "Ruby".cool
 puts 100.h1
 puts 10.h2
 puts 3.h3
-
-
-
