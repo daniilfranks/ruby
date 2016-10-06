@@ -97,3 +97,90 @@ tri = Triangle.new(10, 20 , 10.9, 17.4, 4.93)
 p tri.area
 p tri.perimeter
 
+
+
+class Beginning
+	def initialize
+		if defined?(@@number_of_squares)
+			@@number_of_squares += 1
+		else
+			@@number_of_squares = 1
+		end
+	end
+
+	def self.count
+		@@number_of_squares
+	end
+
+	def self.test_method
+		puts "Hi from the Beginning class!"
+	end
+
+	def test_method
+		puts "Hi from an instance of class Beginning!"
+	end
+end
+
+a = Beginning.new
+b = Beginning.new
+puts Beginning.count
+
+Beginning.test_method
+Beginning.new.test_method
+
+
+class ParentClass
+	def method1
+		puts "method1 in the parent class!"
+	end
+
+	def method2
+		puts "method2 in the parent class!"
+	end
+end
+
+class ChildClass < ParentClass
+	def method2
+		puts "method2 in the child class!"
+	end
+end
+
+my_object  = ChildClass.new
+my_object.method1
+my_object.method2
+
+
+class Person
+	def initialize(name)
+		@name = name
+	end
+
+	def name
+		@name
+	end
+
+	def name=(name)
+		@name = name
+	end
+end
+
+class Doctor < Person
+	def name
+		"Dr. " + super
+	end
+end
+
+den = Doctor.new("Den")
+puts den.name
+puts den.name = "Rename"
+
+
+class People
+	attr_accessor :name, :age
+end
+
+p = People.new
+p.name = "Den"
+p.age = 25
+#puts p.methods 
+puts p.instance_variables
