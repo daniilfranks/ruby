@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<info lang="ru">
+			
+		<region id="11119" zoom="6" lat="55.350336" lon="50.911013">
+			<title>Республика Татарстан</title>
+		</region>
+	
+			<traffic/>
+			
+		<weather climate="1" region="43">
+			<source>mb3d</source>
+			
+		<day>
+			<title>Казань</title>
+			<country>Россия</country>
+			<time_zone>Europe/Moscow</time_zone>
+			<summer-time>1</summer-time>
+			<sun_rise>05:56</sun_rise>
+			<sunset>17:05</sunset>
+			<daytime>n</daytime>
+			<date date="2016-10-06T00:00:00Z">
+				<day weekday="чт">6</day>
+				<month name="октября">10</month>
+				<year>2016</year>
+				<daytime>n</daytime>
+			</date>
+			
+		<day_part typeid="3" type="вечер">
+			<weather_type>облачно</weather_type>
+			<weather_code>overcast</weather_code>
+			<image>https://yastatic.net/weather/i/icons/blueye/24/ovc.png</image>
+			<image-v2 size="22x22">http://yandex.st/weather/v-1/i/icons/22x22/ovc_+6.png</image-v2>
+			<image-v3 size="48">https://yastatic.net/weather/i/icons/blueye/48/ovc.png</image-v3>
+			<image_number>5</image_number>
+			<wind_speed>3.2</wind_speed>
+			<wind_direction id="e">восток</wind_direction>
+			<dampness>81</dampness>
+			<hectopascal>1024</hectopascal>
+			<torr>768</torr>
+			<pressure>768</pressure>
+			<temperature class_name="t8" color="F3F1E3">+7</temperature>
+			<time_zone>Europe/Moscow</time_zone>
+			<observation_time>19:00</observation_time>
+			<observation>2016-10-06T19:00:00</observation>
+		</day_part>
+	
+			
+		<day_part typeid="4" type="ночь">
+			<image-v2 size="22x22">http://yandex.st/weather/v-1/i/icons/22x22/ovc_+6.png</image-v2>
+			<image-v3 size="30">https://yastatic.net/weather/i/icons/blueye/30/ovc.png</image-v3>
+			
+			<temperature_from class_name="t6" color="F2F0E6">+6</temperature_from>
+			<temperature_to class_name="t8" color="F3F1E3">+7</temperature_to>
+		
+		</day_part>
+	
+
+		<day_part typeid="1" type="утро">
+			<image-v2 size="22x22">http://yandex.st/weather/v-1/i/icons/22x22/ovc_-ra_+8.png</image-v2>
+			<image-v3 size="30">https://yastatic.net/weather/i/icons/blueye/30/ovc_-ra.png</image-v3>
+			
+			<temperature_from class_name="t6" color="F2F0E6">+6</temperature_from>
+			<temperature_to class_name="t8" color="F3F1E3">+8</temperature_to>
+		
+		</day_part>
+	
+
+		<day_part typeid="2" type="день">
+			<image-v2 size="22x22">http://yandex.st/weather/v-1/i/icons/22x22/ovc_-ra_+8.png</image-v2>
+			<image-v3 size="30">https://yastatic.net/weather/i/icons/blueye/30/ovc_-ra.png</image-v3>
+			
+			<temperature_from class_name="t8" color="F3F1E3">+8</temperature_from>
+			<temperature_to class_name="t10" color="F4F1E0">+9</temperature_to>
+		
+		</day_part>
+	
+
+		<day_part typeid="3" type="вечер">
+			<image-v2 size="22x22">http://yandex.st/weather/v-1/i/icons/22x22/ovc_ra_+8.png</image-v2>
+			<image-v3 size="30">https://yastatic.net/weather/i/icons/blueye/30/ovc_ra.png</image-v3>
+			<temperature class_name="t8" color="F3F1E3">+8</temperature>
+		</day_part>
+	
+			
+			<night_short><temperature class_name="t10" color="F4F1E0">+9</temperature></night_short>,
+			<tomorrow><temperature class_name="t10" color="F4F1E0">+9</temperature></tomorrow>
+		
+		</day>
+	
+			<url slug="kazan">http://pogoda.yandex.ru/kazan/</url>
+		</weather>
+	
+		</info>
