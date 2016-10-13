@@ -25,4 +25,3 @@ s.add_to_stack("item three")
 p s.stack
 s.take_from_stack
 p s.stack
-
