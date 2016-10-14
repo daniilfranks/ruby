@@ -30,3 +30,4 @@ puts "My name #{myname}"
 
 puts "Program finished. Press Enter to exit"
 gets
+
