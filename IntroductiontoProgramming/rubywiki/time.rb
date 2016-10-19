@@ -37,6 +37,9 @@ p Time.at(-284061600)
 
 p Time.new.utc
 p Time.utc(2016, 10, 19, 21, 32, 59,)
+p Time.local(2016, 10, 19, 21, 32, 59,)
+
+
 
 
 
