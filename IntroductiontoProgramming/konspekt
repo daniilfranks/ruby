@@ -75,8 +75,20 @@ a = a+b
 b = a-b
 a = a-b
 
-=========================books=========================================
-The programming ruby 2.0
-
-
-
+===================================================
++/- Ruby/Ruby on Rails
+Ruby/Ruby on Rails версии
+MRI Rubinius JRuby Gil
+Http ?
+http server
+block prock lambda
+Paterns
+sql db indexes
+rake
+Sync/Async ruby,
+message queues
+web servers puma thin unicorn
+microservices - pains and best practices
+deploy devops stuff
+cluster lb
+distributed database consensus algorithms wal
