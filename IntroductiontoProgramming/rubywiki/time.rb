@@ -39,34 +39,20 @@ p Time.new.utc
 p Time.utc(2016, 10, 19, 21, 32, 59,)
 p Time.local(2016, 10, 19, 21, 32, 59,)
 
+p "="*20
 
+p t = Time.now
+p t +(60 * 60 * 24)
+p t + 2592000
+p t.year
+p t.month
+p t.day
+p t.hour
+p t.min
+p t.sec
+p t.zone
+p t.yday
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+time = Time.now
+p time.strftime("%m.%d.%Y %H:%M:%S %z")
+p time.strftime("%m.%d.%Y %H:%M:%S UTC")
