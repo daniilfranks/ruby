@@ -47,3 +47,26 @@ people.each { |p| b += p.length }
 p b
 
 
+
+arr = (1..9).to_a
+even_indexes, odd_indexes = (0...arr.length).partition { |i| i.even? }
+
+puts arr.values_at(*even_indexes)
+puts arr.values_at(*odd_indexes)
+
+
+arr = (110..119).to_a
+a , b = (0...arr.length).partition { |i| i < 5 }
+
+puts arr.values_at(*b)
+puts arr.values_at(*a)
+
+
+arr = (110..119).to_a
+a , b = arr.partition { |i| i < 115 }
+
+p b
+p a
+
+p b | a
+
