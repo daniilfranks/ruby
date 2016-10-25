@@ -1,12 +1,30 @@
+arr = ["apple", "cake", "bake", "cookie", "bake", "car", "apple", "apple"]
+hash = Hash.new(0)
+
+arr.each { |value| hash[value] += 1 }
+p hash
 
 
+arr = ["cake", "bake", "cookie", "car", "apple"]
+hash = Hash.new{ |h,k| h[k] = [] }
+
+arr.each{ |value| hash[value.length] << value }
+p hash
+
+p "="*30
 
 
+opts = Hash.new{ |k,v| k[v] = Hash.new(&opts.default_proc) }
 
+opts['dev']['db']['host'] = 'localhost:3000'
+opts['dev']['db']['user'] = 'user'
+opts['dev']['db']['pass'] = '12345'
 
+opts['test']['db']['host'] = 'localhost:3000' 
+opts['test']['db']['user'] = 'test_user'
+opts['test']['db']['pass'] = '54321'
 
-
-
+p opts
 
 
 
