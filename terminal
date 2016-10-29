@@ -5,6 +5,8 @@ echo "Hello World"
 ls         #List files and directories in current directory
 ls /
 ls -lah
+ls -a
+ls -al
 pwd        #present working directory
 cd         #Change directorys
 touch      #Create a file
@@ -24,3 +26,4 @@ q
 vim first.txt
 <ESC> + :wq      #Exit and save
 <ESC> + :q!      #Exit without saving
+
