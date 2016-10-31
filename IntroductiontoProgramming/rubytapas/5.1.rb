@@ -13,11 +13,3 @@ ffmpeg_flags =
 	output_options
 
 p ffmpeg_flags
-
-
-
-
-
-
-
-
