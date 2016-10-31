@@ -20,7 +20,6 @@ class ObsequiousImp
 	end
 
 	def greet(title, first_name, last_name)
-		service_inquiry = "order you a coffee"
 
 		puts "#{SALUTATION}, #{title}, #{first_name} #{last_name}. ",
 			"Welcome to #{$progname} version #{DisOrganizer::VERSION}. ",
