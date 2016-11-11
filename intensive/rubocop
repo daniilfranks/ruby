@@ -1,0 +1,2 @@
+gem install rubocop
+rubocop ruby_file.rb
