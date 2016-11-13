@@ -25,18 +25,23 @@ class CoffeMachine
   end
 end
 
-one = CoffeMachine.new
-one.make_coffee
-#one.get_start
+class CappuccinoMachine < CoffeMachine
+  def make_coffee
+    super
+    prepare_milk
+    push_foam
+  end
 
-class MachineCleaner < CoffeMachine
-  def clean(machine)
-    machine.get_start
-    machine.get_water(200)
-    puts "Cleane ready"
+  protected
+
+  def prepare_milk
+    puts "Select and boil the milk"
+  end
+
+  def push_foam
+    puts "We produce milk foam in the cup"
   end
 end
 
-p machine_cleaner = MachineCleaner.new
-p machine_cleaner.clean(one)
-#p machine_cleaner.get_start
+p one = CappuccinoMachine.new
+p one.make_coffee
