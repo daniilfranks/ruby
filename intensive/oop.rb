@@ -1,8 +1,26 @@
 class CoffeMachine
 	def make_coffee
-		puts "Start"
-		puts "Coffee ready"
+    get_start
+    get_water(200)
+    get_beans(50)
+		coffe_ready
 	end
+
+  def get_start
+    puts "Start"
+  end
+
+  def coffe_ready
+    puts "Coffee ready!"
+  end
+
+  def get_water(mls)
+    puts "Water #{mls}mls."
+  end
+
+  def get_beans(grams)
+    puts "Beans #{grams}grams."
+  end
 end
 
 one = CoffeMachine.new
