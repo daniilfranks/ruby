@@ -23,4 +23,3 @@ p is_valid_ip_address?("172.16.0.0") ? "Valid" : "Invalid"
 p is_valid_ip_address?("172.31.255.255") ? "Valid" : "Invalid"
 p is_valid_ip_address?("172.31.255.256") ? "Valid" : "Invalid"
 =end
-

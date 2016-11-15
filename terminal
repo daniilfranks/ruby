@@ -26,4 +26,3 @@ q
 vim first.txt
 <ESC> + :wq      #Exit and save
 <ESC> + :q!      #Exit without saving
-

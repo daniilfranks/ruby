@@ -39,21 +39,3 @@ rescue StandardError => e
 	error_logger("Error: #{e} at #{Time.now}")
 end
 =end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

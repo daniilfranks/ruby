@@ -7,4 +7,3 @@ end
 
 cart.read_from_file
 cart.save_to_file
-
