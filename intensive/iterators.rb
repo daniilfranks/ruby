@@ -34,3 +34,39 @@ loop do
   break if number == rand
 end
 
+
+
+i = 1
+while i < 11
+  print "#{i} "
+  i += 1
+end
+puts ''
+
+
+i = 1
+rand = rand(10)
+while i < rand
+  print "#{i} "
+  i += 1
+end
+puts ''
+
+names = ['den', 'jok', 'bob', 'alex', 'leo']
+i = 0
+while i < names.length
+  puts names[i]
+  i += 1
+end
+puts ''
+
+
+names = ['den', 'jok', 'bob', 'alex', 'leo']
+i = 0
+while i < names.length
+  arr = []
+  arr << names[i] if i.odd?
+  puts arr
+  i += 1
+end
+puts ''
