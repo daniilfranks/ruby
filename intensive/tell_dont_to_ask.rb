@@ -38,3 +38,4 @@ p den.debit(700)
 p pay = PaymentService.new(den)
 p pay
 p pay.debit(500)
+#p pay.debit(10000)
