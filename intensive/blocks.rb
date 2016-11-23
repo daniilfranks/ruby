@@ -80,3 +80,13 @@ l = Logger.new do |config|
 end
 
 puts l.log("Own logger")
+
+
+def info(name)
+  return "Hi, #{name}" if block_given?
+  "Default parametrs #{name}"
+end
+
+p info('Den')
+
+info('Den') do |name|
