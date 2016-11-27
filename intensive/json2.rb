@@ -7,3 +7,4 @@ user = JSON.parse(uri.read)
 File.open('parseuser.json', 'w') do |w|
   w << user
 end
+
