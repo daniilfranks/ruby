@@ -2,3 +2,9 @@
 E, [2016-11-28T10:23:14.613826 #3809] ERROR -- : Error divided by 0
 E, [2016-11-28T10:24:03.484221 #3824] ERROR -- : Error divided by 0
 E, [2016-11-28T10:24:03.484395 #3824] ERROR -- : Error no implicit conversion of String into Integer
+I, [2016-11-28T10:28:23.679320 #3873]  INFO -- : nil
+E, [2016-11-28T10:28:23.679558 #3873] ERROR -- : Error divided by 0
+E, [2016-11-28T10:28:23.679634 #3873] ERROR -- : Error no implicit conversion of String into Integer
+I, [2016-11-28T10:28:31.853572 #3875]  INFO -- : nil
+E, [2016-11-28T10:28:31.853833 #3875] ERROR -- : Error divided by 0
+E, [2016-11-28T10:28:31.853908 #3875] ERROR -- : Error no implicit conversion of String into Integer

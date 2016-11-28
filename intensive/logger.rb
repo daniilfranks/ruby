@@ -14,7 +14,6 @@ rescue Exception => e
   logger.error "Error #{e}"
 end
 
-
 #logger.fatal { "Argument 'foo' not given." }
 #logger.error "Argument #{ @foo } mismatch."
 #logger.info('initialize') { "Initializing..." }
