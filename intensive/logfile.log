@@ -1,0 +1,4 @@
+# Logfile created on 2016-11-28 10:23:14 +0300 by logger.rb/53141
+E, [2016-11-28T10:23:14.613826 #3809] ERROR -- : Error divided by 0
+E, [2016-11-28T10:24:03.484221 #3824] ERROR -- : Error divided by 0
+E, [2016-11-28T10:24:03.484395 #3824] ERROR -- : Error no implicit conversion of String into Integer
