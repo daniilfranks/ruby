@@ -53,3 +53,27 @@ task :today do
   Rake::Task['article:create_article'].invoke
   Rake::Task['article:edit_article'].invoke
 end
+
+=begin
+desc 'create file foo.txt'
+file 'foo.txt' do
+  touch 'foo.txt'
+end
+
+desc 'foo.txt => bar.txt'
+file 'foo.txt' => 'bar.txt' do
+  cp 'foo.txt', 'bar.txt'
+end
+=end
+
+
+task :name_1 do
+  puts 'name_1'
+end
+
+task :name_2 do
+  puts 'name_2'
+end
+
+task :name_3 => ['name_1', 'name_2'] do
+end
