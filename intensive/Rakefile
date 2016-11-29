@@ -1,0 +1,45 @@
+#rake
+#task :default do
+#  puts 'Hello World!'
+#end
+
+#rake ring
+desc 'Ring the bell'
+task :ring do
+  puts "Bell is ringing."
+end
+
+#rake enter
+#зависемость
+desc 'Enter home'
+task :enter => :ring do
+  puts "Entering home!"
+end
+
+#rake -T
+
+file 'products.sql' => 'products.xml' do
+# build SQL INSERT clause and save it in products.sql file,
+# basing on products.xml datafile
+end
+
+#manipulate_files
+task :manipulate_files do
+  mkdir 'new_dir'
+  mv 'new_dir', 'lukasz'
+  chmod 0777, 'lukasz'
+  touch 'lukasz/wrobel.txt'
+  #rm_rf 'lukasz'
+end
+
+task :rubyrake do 
+  ruby 'rubyrake.rb'
+end
+
+#rake article:create_article
+namespace :article do
+  desc 'create a article'
+  task :create_article do
+    puts 'create A article'
+  end
+end
