@@ -42,4 +42,14 @@ namespace :article do
   task :create_article do
     puts 'create A article'
   end
+
+  desc 'edit a article'
+  task :edit_article do
+    puts 'edit A article'
+  end
+end
+
+task :today do
+  Rake::Task['article:create_article'].invoke
+  Rake::Task['article:edit_article'].invoke
 end
