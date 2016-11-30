@@ -1,0 +1,15 @@
+---
+lister: !ruby/object:Lister
+  lists:
+  - !ruby/struct:Lister::List
+    name: ship chores
+    tasks:
+    - !ruby/struct:Lister::Task
+      name: Early rise (3:00PM)
+      status: :todo
+    - !ruby/struct:Lister::Task
+      name: Waffles vindaloo with Kryten
+      status: :todo
+    - !ruby/struct:Lister::Task
+      name: Call Rimmer a smeghead
+      status: :todo

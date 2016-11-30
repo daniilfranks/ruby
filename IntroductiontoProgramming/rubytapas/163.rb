@@ -34,41 +34,19 @@ end
 
 lister = Lister.new
 lister.add_list('ship chores') do |list|
-  list.add_task('Early rise (3:00PM')
+  list.add_task('Early rise (3:00PM)')
   list.add_task('Waffles vindaloo with Kryten')
   list.add_task('Call Rimmer a smeghead')
 end
 
-require 'pstore'
-require 'pp'
+require 'yaml/store'
 
-store = PStore.new('todo.pstore')
+store = YAML::Store.new('todo.yaml')
+
 store.transaction do |s|
   s['lister'] = lister
 end
 
-store = PStore.new('todo.pstore')
-lister = store.transaction do |s|
-  s['lister']
-end
-
-pp lister
-
-store = PStore.new('todo.pstore')
-
 store.transaction do |s|
-  s['lister'].lists.first.add_task('Golf with the Cat')
-end
-
-lister = store.transaction do |s|
-  s['lister'].lists.first.tasks.last
-end
-
-read_only = true
-store.transaction(read_only) do |s|
-  pp s['lister'].lists.first.add_task('Play quitar')
-end
-
-store.transaction do |s|
-  pp s['lister'].lists.first.tasks
+  s['lister'].lists.first.tasks
 end
