@@ -2,19 +2,14 @@
 # rackup
 # localhost:9292
 
-Dir[File.join(File.dirname(__FILE__), 'lib', '*.rb')].each {|file| require file }
-Dir[File.join(File.dirname(__FILE__), 'app', '**', '*.rb')].each {|file| require file }
-
 require 'yaml'
-ROUTES = YAML.load(File.read(File.join(File.dirname(__FILE__), "app", "routes.yml"))) # 1
-
-require "./lib/router" # 2
+require "./lib/boot"
 
 class App
   attr_reader :router
 
   def initialize 
-    @router = Router.new(ROUTES) # 3
+    @router = Router.new(ROUTES)
   end
 
   def call(env)
@@ -25,4 +20,4 @@ class App
   def self.root
     File.dirname(__FILE__)
   end
-end 
+end
