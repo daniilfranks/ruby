@@ -1,0 +1,7 @@
+#bundle init
+# A sample Gemfile
+#bundle install
+source "https://rubygems.org"
+
+gem 'rack'
+gem 'puma'
