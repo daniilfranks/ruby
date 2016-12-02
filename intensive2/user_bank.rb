@@ -51,8 +51,14 @@ module BankAccount
     @balance = 0
   end
 
+  def commission
+    0.015
+  end
+
   def transfer(amount, user)
     if @balance > amount
+      commission_bank = amount * commission
+      @balance -= commission_bank
       @balance -= amount
       user.balance += amount
     else
