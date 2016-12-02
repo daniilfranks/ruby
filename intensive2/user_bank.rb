@@ -37,6 +37,7 @@ module BankAccount
 
   def initialize
     @balance = 0
+    @log     = []
   end
 
   def deposit(amount)
@@ -49,6 +50,7 @@ module BankAccount
 
   def rest
     @balance = 0
+    log('rest')
   end
 
   def commission
@@ -61,8 +63,16 @@ module BankAccount
       @balance -= commission_bank
       @balance -= amount
       user.balance += amount
+      log("#{user.name}, #{Time.new}, #{@balance}, Operation: transfer #{amount}")
     else
-      puts 'Not enough money!'
+      log("#{user.name}, #{Time.new}, #{@balance}, Operation: transfer #{amount}")
+    end
+  end
+
+  def log(operation)
+    @log << "#{operation}"
+    File.open('log.txt', 'a') do |w|
+      w.write("#{@log}\n")
     end
   end
 end
@@ -127,7 +137,7 @@ p u1.balance
 p '='*30
 
 p u2.transfer(2000, u1)
-p u2.transfer(20000, u1)
+p u2.transfer(50000, u1)
 
 p '='*30
 
