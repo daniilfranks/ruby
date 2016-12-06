@@ -2,6 +2,7 @@ require 'pp'
 
 Item = Struct.new(:name, :price)
 
+# Class Cart
 class Cart
   attr_accessor :cart
 
@@ -14,7 +15,7 @@ class Cart
   end
 
   def total
-    @cart.inject(0) { |sum, a| sum + a[1] }
+    @cart.inject(0) { |acc, elem| acc + elem[1] }
   end
 
   def show
