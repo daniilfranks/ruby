@@ -37,3 +37,4 @@ rescue SQLite3::Exception => e
   p 'Exception occurred'
   p e
 end
+
