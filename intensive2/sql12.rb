@@ -76,3 +76,47 @@ rescue SQLite3::Exception => e
   puts 'Exception occurred'
   puts e
 end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT max(age), min(age) FROM peoples')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM peoples WHERE Id IN(?, ?, ?)', 1, 3, 5)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT count(name) FROM peoples')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT sum(age) FROM peoples')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
