@@ -44,6 +44,8 @@ begin
               VALUES(?, ?, ?, ?)', 'Glen', 35, 'NY', 9000)
   db.execute('INSERT INTO company(name, age, city, salary) 
               VALUES(?, ?, ?, ?)', 'Ash', 28, 'NY', 7400)
+  db.execute('INSERT INTO company(name, age, city, salary) 
+              VALUES(?, ?, ?, ?)', 'Bag', 99, 'NY', 80000)
 
   db.close
 rescue SQLite3::Exception => e
@@ -173,6 +175,7 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+#Range
 begin
   db = SQLite3::Database.new('test.db')
   array = db.execute('SELECT * FROM company WHERE age IN(?, ?)', 25, 35)
@@ -206,3 +209,215 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+#UPDATE
+begin
+  db = SQLite3::Database.new('test.db')
+  db.execute('UPDATE company SET city = ? WHERE Id = ?', 'Delover', 5)
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  db.execute('UPDATE company SET city = ?, salary = ? WHERE Id = ?', 'Toronto', 10000, 6)
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+#Delete
+begin
+  db = SQLite3::Database.new('test.db')
+  db.execute('DELETE FROM company WHERE Id = ?', 7)
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+#Limit
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company LIMIT 3')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company LIMIT 3 OFFSET 2')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+#Order
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company ORDER BY salary ASC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company ORDER BY age ASC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company ORDER BY salary DESC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company ORDER BY age DESC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company ORDER BY name ASC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM company ORDER BY name DESC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+#GROUP BY
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT name, salary FROM company GROUP BY name')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT name, city FROM company GROUP BY name')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT name, age FROM company GROUP BY name ORDER BY name DESC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT name, age FROM company GROUP BY name ORDER BY age DESC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT name, age FROM company GROUP BY name ORDER BY age ASC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
