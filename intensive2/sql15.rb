@@ -5,25 +5,7 @@ require 'pp'
 begin
   db = SQLite3::Database.new('test.db')
   db.execute('DROP TABLE company')
-
-  db.close
-rescue SQLite3::Exception => e
-  puts 'Exception occurred'
-  puts e
-end
-
-begin
-  db = SQLite3::Database.new('test.db')
   db.execute('DROP TABLE orders')
-
-  db.close
-rescue SQLite3::Exception => e
-  puts 'Exception occurred'
-  puts e
-end
-
-begin
-  db = SQLite3::Database.new('test.db')
   db.execute('DROP TABLE item')
 
   db.close
@@ -56,6 +38,21 @@ begin
               ord_date           date     NOT NULL UNIQUE,
               ord_qty            integer  NOT NULL,
               cost               integer  NOT NULL
+            )')
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  db.execute('CREATE TABLE item(
+              Id INTEGER PRIMARY KEY,
+              item_id             text(4)  NOT NULL UNIQUE,
+              item_desc           text(20) NOT NULL,
+              rate                integer  CHECK (rate > 0 AND rate < 100)
             )')
 
   db.close
@@ -97,6 +94,23 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+begin
+  db = SQLite3::Database.new('test.db')
+  db.execute('INSERT INTO item(item_id, item_desc, rate) 
+              VALUES(?, ?, ?)', 'ITM1', 'Pean-n-Nut', 15)
+  db.execute('INSERT INTO item(item_id, item_desc, rate) 
+              VALUES(?, ?, ?)', 'ITM2', 'Cool Pesta', 10)
+  db.execute('INSERT INTO item(item_id, item_desc, rate) 
+              VALUES(?, ?, ?)', 'ITM3', 'Cool Pesta', 110)
+  db.execute('INSERT INTO item(item_id, item_desc, rate) 
+              VALUES(?, ?, ?)', 'ITM4', 'Cool Pesta', 0)
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
 #SELECT
 begin
   db = SQLite3::Database.new('test.db')
@@ -114,6 +128,19 @@ pp '*'*50
 begin
   db = SQLite3::Database.new('test.db')
   array = db.execute('SELECT * FROM orders')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+pp '*'*50
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM item')
   pp array
 
   db.close
