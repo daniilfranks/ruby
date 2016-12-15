@@ -124,3 +124,58 @@ rescue SQLite3::Exception => e
   puts 'Exception occurred'
   puts e
 end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT cust_name, opening_amt, receive_amt,
+                      outstanding_amt, (receive_amt * 5 / 100)
+                      FROM customer
+                      WHERE outstanding_amt <= ?', 5000)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT cust_code, cust_name, cust_city, grade
+                      FROM customer
+                      WHERE cust_country = ? AND grade = ?', 'RUS', 1)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT cust_code, cust_name, cust_city, grade
+                      FROM customer
+                      WHERE cust_country = ? OR grade = ?', 'RUS', 3)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT cust_code, cust_name, cust_city, cust_country, grade
+                      FROM customer
+                      WHERE (cust_country = ? OR cust_city = ?)
+                      AND grade <> ?', 'RUS', 'Brisban', 3)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+

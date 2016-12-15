@@ -103,3 +103,63 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+p '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT agent_names, working_area, (commission * 2)
+                      FROM agents
+                      WHERE (commission * 2) > ?', 0.25)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+p '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT agent_code, agent_names, commission
+                      FROM agents
+                      WHERE commission = ?', 0.15)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+p '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT agent_code, agent_names, commission
+                      FROM agents
+                      WHERE commission > ?', 0.14)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+p '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT agent_code, agent_names, commission
+                      FROM agents
+                      WHERE commission < ?', 0.15)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
