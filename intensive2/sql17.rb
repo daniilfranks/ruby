@@ -178,3 +178,45 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+p '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT agent_code, agent_names, working_area
+                      FROM agents
+                      WHERE working_area IN (?, ?, ?)', 'Kazan', 'London', 'Toronto')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+p '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT agent_code, agent_names, commission
+                      FROM agents
+                      WHERE commission IN (?, ?, ?)', '.10', '.14', '.17')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT agent_code, agent_names, commission
+                      FROM agents
+                      WHERE commission NOT IN (?, ?, ?)', '.10', '.14', '.17')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
