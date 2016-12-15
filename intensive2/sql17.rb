@@ -163,3 +163,18 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+p '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT agent_code, agent_names, commission
+                      FROM agents
+                      WHERE commission BETWEEN ? AND ?', 0.12, 0.14)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+

@@ -179,3 +179,69 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT cust_code, cust_city
+                      FROM customer
+                      WHERE cust_city LIKE ?', 'B%')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT cust_code, cust_city, phone_no
+                      FROM customer
+                      WHERE phone_no LIKE ?', '%12%')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT agent_code, cust_name, cust_name, cust_city
+                      FROM customer
+                      WHERE (agent_code BETWEEN ? AND ?)
+                      AND NOT agent_code IN (?, ?, ?)',
+                      'A001', 'A008', 'A002', 'A007', 'A005')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT cust_code, cust_city, cust_name
+                      FROM customer
+                      WHERE cust_name BETWEEN ? AND ?', 'A', 'I')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT cust_code, cust_city, cust_name
+                      FROM customer
+                      WHERE cust_name NOT BETWEEN ? AND ?', 'K', 'Y')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end

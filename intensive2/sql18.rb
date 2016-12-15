@@ -356,3 +356,34 @@ rescue SQLite3::Exception => e
   puts 'Exception occurred'
   puts e
 end
+
+pp '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute("SELECT first_name, hire_date, salary
+                      FROM employees
+                      WHERE hire_date BETWEEN ? AND ?", '01-01-1990', '12-12-1995')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+pp '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute("SELECT first_name, hire_date, salary
+                      FROM employees
+                      WHERE hire_date NOT BETWEEN ? AND ?", '01-01-1990', '12-12-1995')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
