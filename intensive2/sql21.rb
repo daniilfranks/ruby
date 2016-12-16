@@ -19,8 +19,9 @@ begin
   db = SQLite3::Database.new('test.db')
   db.execute('CREATE TABLE topics(
               id_topic INTEGER PRIMARY KEY,
-              topic_name text,
-              id_author  integer       
+              topic_name varchar(100) NOT NULL,
+              id_author  integer(10)  NOT NULL,  
+              FOREIGN KEY(id_author) REFERENCES users(id_user)     
             )')
 
   db.close
@@ -33,9 +34,9 @@ begin
   db = SQLite3::Database.new('test.db')
   db.execute('CREATE TABLE users(
               id_user INTEGER PRIMARY KEY,
-              name text,
-              email text,
-              password text     
+              name     varchar(20) NOT NULL,
+              email    varchar(50) NOT NULL,
+              password varchar(20) NOT NULL    
             )')
 
   db.close
@@ -48,9 +49,11 @@ begin
   db = SQLite3::Database.new('test.db')
   db.execute('CREATE TABLE posts(
               id_post INTEGER PRIMARY KEY,
-              message text,
-              id_author  integer,
-              id_topic integer     
+              message   text        NOT NULL,
+              id_author integer(10) NOT NULL,
+              id_topic  integer(10) NOT NULL,
+              FOREIGN KEY(id_author) REFERENCES users(id_user),
+              FOREIGN KEY(id_topic) REFERENCES topics(id_topic)     
             )')
 
   db.close
@@ -58,3 +61,4 @@ rescue SQLite3::Exception => e
   puts 'Exception occurred'
   puts e
 end
+
