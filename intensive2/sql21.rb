@@ -62,3 +62,60 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+#INSERT
+begin
+  db = SQLite3::Database.new('test.db')
+  db.execute('INSERT INTO users(name, email, password)
+              VALUES(?, ?, ?)', 'Den', 'danila_babanov@yahoo.com', '12345')
+  db.execute('INSERT INTO users(name, email, password)
+              VALUES(?, ?, ?)', 'Leo', 'leo@gmail.com', '5562314')
+  db.execute('INSERT INTO users(name, email, password)
+              VALUES(?, ?, ?)', 'Jok', 'jok322@yahoo.com', '97523932')
+  db.execute('INSERT INTO users(name, email, password)
+              VALUES(?, ?, ?)', 'Byblik', 'byblik@rambler.com', '18349640')
+  db.execute('INSERT INTO users(name, email, password)
+              VALUES(?, ?, ?)', 'Filip', 'filip12345@gmail.com', '38586329')
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  db.execute('INSERT INTO topics(topic_name, id_author)
+              VALUES(?, ?)', 'first', 1)
+  db.execute('INSERT INTO topics(topic_name, id_author)
+              VALUES(?, ?)', 'php', 2)
+  db.execute('INSERT INTO topics(topic_name, id_author)
+              VALUES(?, ?)', 'ruby', 1)
+  db.execute('INSERT INTO topics(topic_name, id_author)
+              VALUES(?, ?)', 'C++', 2)
+  db.execute('INSERT INTO topics(topic_name, id_author)
+              VALUES(?, ?)', 'Ruby on Rails', 3)
+  
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  db.execute('INSERT INTO posts(message, id_author, id_topic)
+              VALUES(?, ?, ?)', 'First post', 1, 1)
+  db.execute('INSERT INTO posts(message, id_author, id_topic)
+              VALUES(?, ?, ?)', 'Text php', 1, 2)
+  db.execute('INSERT INTO posts(message, id_author, id_topic)
+              VALUES(?, ?, ?)', 'Text text ruby', 2, 3)
+  db.execute('INSERT INTO posts(message, id_author, id_topic)
+              VALUES(?, ?, ?)', 'Rails post', 3, 4)
+  db.execute('INSERT INTO posts(message, id_author, id_topic)
+              VALUES(?, ?, ?)', 'Text Sinatra', 4, 5)
+  
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
