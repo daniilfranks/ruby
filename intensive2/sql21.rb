@@ -298,3 +298,67 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT name FROM users WHERE id_user = ?', 1)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT name FROM users WHERE id_user IN
+                      (SELECT id_author FROM topics WHERE topic_name = ?)', 'C++')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT message FROM posts WHERE id_author IN
+                      (SELECT id_author FROM topics WHERE topic_name = ?)', 'ruby')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+pp '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT topic_name, name FROM topics, users 
+                      WHERE topics.id_author = users.id_user')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+pp '*'*45
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT posts.message, topics.topic_name, users.name
+                      FROM posts, topics, users 
+                      WHERE posts.id_author = users.id_user
+                      AND posts.id_topic = topics.id_topic')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
