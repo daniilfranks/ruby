@@ -119,3 +119,182 @@ rescue SQLite3::Exception => e
   puts 'Exception occurred'
   puts e
 end
+
+#SELECT
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM users')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT name, email FROM users')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM posts')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics ORDER BY topic_name')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics ORDER BY topic_name DESC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics ORDER BY topic_name DESC, id_author DESC')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics WHERE id_author = ?', 1)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics WHERE topic_name = ?', 'Ruby on Rails')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics WHERE id_author > ?', 1)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics WHERE id_author IS NOT NULL')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics WHERE id_topic BETWEEN ? AND ?', 1, 3)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics WHERE id_topic IN(?, ?)', 1, 3)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics WHERE id_topic NOT IN(?, ?)', 1, 3)
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics WHERE topic_name LIKE ?', 'ru%')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics WHERE topic_name NOT LIKE ?', 'ru%')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM topics WHERE topic_name LIKE ?', '%i%')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
