@@ -113,6 +113,8 @@ begin
               VALUES(?, ?, ?)', 'Rails post', 3, 4)
   db.execute('INSERT INTO posts(message, id_author, id_topic)
               VALUES(?, ?, ?)', 'Text Sinatra', 4, 5)
+  db.execute('INSERT INTO posts(message, id_author, id_topic)
+              VALUES(?, ?, ?)', 'Ruby string', 4, 3)
   
   db.close
 rescue SQLite3::Exception => e
