@@ -1,28 +1,30 @@
+#Выборка всех данных
 'SELECT * FROM Customers'
 
+#Поиск по городу
 'SELECT * FROM Customers WHERE city = ?', 'Kazan'
 
+#Выборка по имени и стране
 'SELECT CustomerName, Country FROM Customers'
 
+#Поиск имен с первой буквы
 "SELECT * FROM Customers WHERE CustomerName LIKE 'L%'"
 
+#Поиск имен с разными вариантами
 "SELECT * FROM Customers WHERE CustomerName LIKE 'L%' OR CustomerName LIKE 'R%'"
 
+#Поиск имен с разными вариантами
 "SELECT * FROM Customers WHERE CustomerName LIKE 'L%' 
 OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%'"
 
-"SELECT * FROM Customers WHERE CustomerName LIKE 'L%' 
-OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%'"
-
+#Поиск имен с разными вариантами и по стране
 "SELECT * FROM Customers WHERE CustomerName LIKE 'L%' 
 OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%' AND Country = ?", 'Russia'
 
-'SELECT CustomerName, city FROM Customers'
-
+#Выборка уникальных городов
 'SELECT DISTINCT city FROM Customers'
 
-'SELECT * FROM Customers WHERE Country = ?', 'USA'
-
+#Выборка по id (равно не равно больше меньше)
 'SELECT * FROM Customers WHERE CustomerID = ?', 1
 'SELECT * FROM Customers WHERE CustomerID <> ?', 10
 'SELECT * FROM Customers WHERE CustomerID > ?', 5
@@ -30,19 +32,53 @@ OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%' AND Country = ?", 'Russia'
 'SELECT * FROM Customers WHERE CustomerID >= ?', 5
 'SELECT * FROM Customers WHERE CustomerID <= ?', 5
 
+#Выборка от до и по ид
 'SELECT * FROM Customers WHERE CustomerID BETWEEN ? AND ?', 5, 10
+'SELECT * FROM Customers WHERE CustomerID NOT BETWEEN ? AND ?', 5, 10
 'SELECT * FROM Customers WHERE CustomerID IN(?, ?, ?)', 1, 3, 5
+'SELECT * FROM Customers WHERE CustomerName IN(?, ?, ?)', 'Den', 'Leo', 'Mikle' 
+'SELECT * FROM Products WHERE(Price BETWEEN ? AND ?) AND NOT CategoryID IN(?, ?, ?)', 10, 20, 1, 2, 3
+'SELECT * FROM Products WHERE ProductsName BETWEEN ? AND ?', 'C', 'M'
+'SELECT * FROM Products WHERE ProductsName NOT BETWEEN ? AND ?', 'C', 'M'
+'SELECT * FROM Orders WHERE OrderDate BETWEEN ? AND ?', '2016-12-20', '2016-12-25'
 
+#Поиск похожих значений в начале или в середине текста
 'SELECT * FROM Customers WHERE CustomerID LIKE ?', '2%'
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '%2'
 'SELECT * FROM Customers WHERE CustomerID LIKE ?', '%2%'
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '[123]%'
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '[1-5]%'
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '[!123]%'
+'SELECT * FROM Customers WHERE CustomerID NOT LIKE ?', '[123]%'
 
+#Выборка по 2 и более значениям
 'SELECT * FROM Customers WHERE Country = ? AND City = ?', 'Russia', 'Kazan'
 'SELECT * FROM Customers WHERE City = ? OR City = ?', 'Kazan', 'UFA'
 'SELECT * FROM Customers WHERE Country = ? AND (City = ? OR City = ?)', 'Russia', 'Kazan', 'UFA'
 
+#Выборка и сортировка по стране
+'SELECT * FROM Customers ORDER BY Country'
+'SELECT * FROM Customers ORDER BY Country DESC'
 
+'SELECT * FROM Customers ORDER BY Country, CustomerName'
+'SELECT * FROM Customers ORDER BY Country ASC, CustomerName DESC'
 
+#Добавить в таблицу
+'INSERT INTO Customers(CustomerName, ContactName, Address, City, PostalCode, Country)
+ VALUES (?, ?, ?, ?, ?, ?)', 
+ 'Den', 'Bob', 'ASDFGL 1/12', 'Kazan', 420000, 'Russia'
 
+#Обновить город у пользователя
+'UPDATE Customers SET City = ? WHERE CustomerID = ?', 'Kazan', 1
 
+#Обновить 2 поля у пользователя
+'UPDATE Customers SET City = ?, ContactName = ? WHERE CustomerID = ?', 'Kazan', 'Den', 1
+
+#Обновить у всех имя из города
+'UPDATE Customers SET ContactName = ? WHERE Country = ?', 'Den', 'Russia'
+
+#Удалить из бызы пользователя
+'DELETE FROM CustomerID WHERE CustomerID = ?', 1
+'DELETE FROM CustomerID WHERE CustomerID = ? AND ContactName = ?', 1, 'Den'
 
 
