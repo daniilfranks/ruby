@@ -66,3 +66,13 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT city || address FROM vendors')
+  pp array
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
