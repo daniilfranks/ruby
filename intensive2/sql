@@ -81,4 +81,57 @@ OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%' AND Country = ?", 'Russia'
 'DELETE FROM CustomerID WHERE CustomerID = ?', 1
 'DELETE FROM CustomerID WHERE CustomerID = ? AND ContactName = ?', 1, 'Den'
 
+#присоединить таблицу заказы к пользователям
+'SELECT orders.order_id, users.user_name, orders.order_date
+ FROM orders
+ INNER JOIN users
+ ON orders.user_id = users.user_id'
 
+'SELECT users.user_name, orders.order_id
+ FROM users
+ INNER JOIN orders
+ ON users.user_id = orders.user_id
+ ORDER BY users.user_name'
+
+'SELECT users.user_name, orders.order_id
+ FROM users
+ LEFT JOIN orders
+ ON users.user_id = orders.user_id
+ ORDER BY users.user_name'
+
+#Объединить Города из 2 столбцов в 1 уникальные города
+'SELECT City FROM Customers
+ UNION
+ SELECT City FROM Suppliers
+ ORDER BY City'
+
+#Объединить Города из 2 столбцов в 1 не уникальные города
+'SELECT City FROM Customers
+ UNION ALL
+ SELECT City FROM Suppliers
+ ORDER BY City'
+
+#Объединить Города(из 1 страны) из 2 столбцов в 1
+'SELECT City, Country FROM Customers
+ WHERE Country = ?
+ UNION ALL
+ SELECT City, Country FROM Suppliers
+ WHERE Country = ?
+ ORDER BY City', 'Russia', 'Russia'
+
+#Создать таблицу
+'CREATE TABLE Person(
+ person_id integer      NOT NULL PRIMARY KEY,
+ name      varchar(100) NOT NULL UNIQUE,
+ city      varchar(100) NOT NULL UNIQUE,
+ bio       text         NOT NULL UNIQUE
+)'
+
+'CREATE TABLE Person(
+ person_id integer      NOT NULL PRIMARY KEY,
+ name      varchar(100) NOT NULL UNIQUE,
+ city      varchar(100) NOT NULL UNIQUE,
+ bio       text         NOT NULL UNIQUE
+)'
+
+#Внешний ключ
