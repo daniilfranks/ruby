@@ -1,0 +1,48 @@
+'SELECT * FROM Customers'
+
+'SELECT * FROM Customers WHERE city = ?', 'Kazan'
+
+'SELECT CustomerName, Country FROM Customers'
+
+"SELECT * FROM Customers WHERE CustomerName LIKE 'L%'"
+
+"SELECT * FROM Customers WHERE CustomerName LIKE 'L%' OR CustomerName LIKE 'R%'"
+
+"SELECT * FROM Customers WHERE CustomerName LIKE 'L%' 
+OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%'"
+
+"SELECT * FROM Customers WHERE CustomerName LIKE 'L%' 
+OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%'"
+
+"SELECT * FROM Customers WHERE CustomerName LIKE 'L%' 
+OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%' AND Country = ?", 'Russia'
+
+'SELECT CustomerName, city FROM Customers'
+
+'SELECT DISTINCT city FROM Customers'
+
+'SELECT * FROM Customers WHERE Country = ?', 'USA'
+
+'SELECT * FROM Customers WHERE CustomerID = ?', 1
+'SELECT * FROM Customers WHERE CustomerID <> ?', 10
+'SELECT * FROM Customers WHERE CustomerID > ?', 5
+'SELECT * FROM Customers WHERE CustomerID < ?', 5
+'SELECT * FROM Customers WHERE CustomerID >= ?', 5
+'SELECT * FROM Customers WHERE CustomerID <= ?', 5
+
+'SELECT * FROM Customers WHERE CustomerID BETWEEN ? AND ?', 5, 10
+'SELECT * FROM Customers WHERE CustomerID IN(?, ?, ?)', 1, 3, 5
+
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '2%'
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '%2%'
+
+'SELECT * FROM Customers WHERE Country = ? AND City = ?', 'Russia', 'Kazan'
+'SELECT * FROM Customers WHERE City = ? OR City = ?', 'Kazan', 'UFA'
+'SELECT * FROM Customers WHERE Country = ? AND (City = ? OR City = ?)', 'Russia', 'Kazan', 'UFA'
+
+
+
+
+
+
+
