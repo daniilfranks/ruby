@@ -59,6 +59,16 @@ rescue SQLite3::Exception => e
   puts e
 end
 
+#INDEX
+begin
+  db = SQLite3::Database.new('test.db')
+  db.execute('CREATE INDEX auth_book_index ON auth_book(auth_id, book_id)')
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
 
 #INSERT
 begin
@@ -115,6 +125,17 @@ begin
   db.execute("PRAGMA foreign_keys = ON")
   db.execute('INSERT INTO auth_book(auth_id, book_id)
               VALUES(?, ?)', 5, 5 )
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  array = db.execute('SELECT * FROM auth_book')
+  pp array
 
   db.close
 rescue SQLite3::Exception => e

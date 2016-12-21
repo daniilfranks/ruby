@@ -193,7 +193,51 @@ OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%' AND Country = ?", 'Russia'
 #Отсутсвоет пользователь или книга
 'INSERT INTO auth_book(auth_id, book_id)
  VALUES(?, ?)', 5, 5
- 
-========================================================
 
+========================================================
+#Выставить значение не меньше 0
+'price integer CHECK(price > 0)'
+
+#Дефолтное значение
+"city varchar(100) DEFAULT 'Kazan'"
+
+#Индексы ускоряют поиск
+'CREATE INDEX name_index ON users(name)'
+'CREATE INDEX auth_book_index ON auth_book(auth_id, book_id)'
+
+#Добавить в таблицу новый столбец
+'ALTER TABLE users ADD bio varchar(100)'
+
+#Удалить столбец
+'ALTER TABLE users DROP COLUMN age'
+
+
+#Среднее значение столбца
+'SELECT AVG(price) FROM Products'
+
+#Количество записей в столбце
+'SELECT COUNT(user_id) FROM users'
+'SELECT COUNT(user_id) FROM users WHERE city = ?', 'Kazan'
+
+#Первое значение
+'SELECT FIRST(CustomerName) FROM Customers'
+
+#Последнее значение
+'SELECT LAST(CustomerName) FROM Customers'
+
+'SELECT MIN(price) FROM Products'
+'SELECT MAX(price) FROM Products'
+
+#Сумма всех значений столбца
+'SELECT SUM(price) FROM Products'
+
+#Объединения результатов выборки по одному или нескольким столбцам
+#Сумма продаж альбома
+'SELECT Singer, SUM(Sale) FROM Artists GROUP BY Singer'
+
+#Когда был выпущен последний альбом группы
+'SELECT Singer, MAX(Year) FROM Artists GROUP BY Singer'
+
+#применяется после GROUP BY
+'SELECT Singer, SUM(Sale) FROM Artists GROUP BY Singer HAVING SUM(Sale) > 20000'
 
