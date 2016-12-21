@@ -1,0 +1,3 @@
+["Den, 2016-12-02 13:43:45 +0300, 8970.0, Operation: transfer 2000"]
+["Den, 2016-12-02 13:43:45 +0300, 8970.0, Operation: transfer 2000", "Den, 2016-12-02 13:43:45 +0300, 8970.0, Operation: transfer 50000"]
+["rest"]

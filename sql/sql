@@ -1,0 +1,247 @@
+#Выборка всех данных
+'SELECT * FROM Customers'
+
+#Поиск по городу
+'SELECT * FROM Customers WHERE city = ?', 'Kazan'
+
+#Выборка по имени и стране
+'SELECT CustomerName, Country FROM Customers'
+
+#Поиск имен с первой буквы
+"SELECT * FROM Customers WHERE CustomerName LIKE 'L%'"
+
+#Поиск имен с разными вариантами
+"SELECT * FROM Customers WHERE CustomerName LIKE 'L%' OR CustomerName LIKE 'R%'"
+
+#Поиск имен с разными вариантами
+"SELECT * FROM Customers WHERE CustomerName LIKE 'L%' 
+OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%'"
+
+#Поиск имен с разными вариантами и по стране
+"SELECT * FROM Customers WHERE CustomerName LIKE 'L%' 
+OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%' AND Country = ?", 'Russia'
+
+#Выборка уникальных городов
+'SELECT DISTINCT city FROM Customers'
+
+#Выборка по id (равно не равно больше меньше)
+'SELECT * FROM Customers WHERE CustomerID = ?', 1
+'SELECT * FROM Customers WHERE CustomerID <> ?', 10
+'SELECT * FROM Customers WHERE CustomerID > ?', 5
+'SELECT * FROM Customers WHERE CustomerID < ?', 5
+'SELECT * FROM Customers WHERE CustomerID >= ?', 5
+'SELECT * FROM Customers WHERE CustomerID <= ?', 5
+
+#Выборка от до и по ид
+'SELECT * FROM Customers WHERE CustomerID BETWEEN ? AND ?', 5, 10
+'SELECT * FROM Customers WHERE CustomerID NOT BETWEEN ? AND ?', 5, 10
+'SELECT * FROM Customers WHERE CustomerID IN(?, ?, ?)', 1, 3, 5
+'SELECT * FROM Customers WHERE CustomerName IN(?, ?, ?)', 'Den', 'Leo', 'Mikle' 
+'SELECT * FROM Products WHERE(Price BETWEEN ? AND ?) AND NOT CategoryID IN(?, ?, ?)', 10, 20, 1, 2, 3
+'SELECT * FROM Products WHERE ProductsName BETWEEN ? AND ?', 'C', 'M'
+'SELECT * FROM Products WHERE ProductsName NOT BETWEEN ? AND ?', 'C', 'M'
+'SELECT * FROM Orders WHERE OrderDate BETWEEN ? AND ?', '2016-12-20', '2016-12-25'
+
+#Поиск похожих значений в начале или в середине текста
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '2%'
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '%2'
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '%2%'
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '[123]%'
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '[1-5]%'
+'SELECT * FROM Customers WHERE CustomerID LIKE ?', '[!123]%'
+'SELECT * FROM Customers WHERE CustomerID NOT LIKE ?', '[123]%'
+
+#Выборка по 2 и более значениям
+'SELECT * FROM Customers WHERE Country = ? AND City = ?', 'Russia', 'Kazan'
+'SELECT * FROM Customers WHERE City = ? OR City = ?', 'Kazan', 'UFA'
+'SELECT * FROM Customers WHERE Country = ? AND (City = ? OR City = ?)', 'Russia', 'Kazan', 'UFA'
+
+#Выборка и сортировка по стране
+'SELECT * FROM Customers ORDER BY Country'
+'SELECT * FROM Customers ORDER BY Country DESC'
+
+'SELECT * FROM Customers ORDER BY Country, CustomerName'
+'SELECT * FROM Customers ORDER BY Country ASC, CustomerName DESC'
+
+#Добавить в таблицу
+'INSERT INTO Customers(CustomerName, ContactName, Address, City, PostalCode, Country)
+ VALUES (?, ?, ?, ?, ?, ?)', 
+ 'Den', 'Bob', 'ASDFGL 1/12', 'Kazan', 420000, 'Russia'
+
+#Обновить город у пользователя
+'UPDATE Customers SET City = ? WHERE CustomerID = ?', 'Kazan', 1
+
+#Обновить 2 поля у пользователя
+'UPDATE Customers SET City = ?, ContactName = ? WHERE CustomerID = ?', 'Kazan', 'Den', 1
+
+#Обновить у всех имя из города
+'UPDATE Customers SET ContactName = ? WHERE Country = ?', 'Den', 'Russia'
+
+#Удалить из бызы пользователя
+'DELETE FROM CustomerID WHERE CustomerID = ?', 1
+'DELETE FROM CustomerID WHERE CustomerID = ? AND ContactName = ?', 1, 'Den'
+
+#присоединить таблицу заказы к пользователям
+'SELECT orders.order_id, users.user_name, orders.order_date
+ FROM orders
+ INNER JOIN users
+ ON orders.user_id = users.user_id'
+
+'SELECT users.user_name, orders.order_id
+ FROM users
+ INNER JOIN orders
+ ON users.user_id = orders.user_id
+ ORDER BY users.user_name'
+
+'SELECT users.user_name, orders.order_id
+ FROM users
+ LEFT JOIN orders
+ ON users.user_id = orders.user_id
+ ORDER BY users.user_name'
+
+#Объединить Города из 2 столбцов в 1 уникальные города
+'SELECT City FROM Customers
+ UNION
+ SELECT City FROM Suppliers
+ ORDER BY City'
+
+#Объединить Города из 2 столбцов в 1 не уникальные города
+'SELECT City FROM Customers
+ UNION ALL
+ SELECT City FROM Suppliers
+ ORDER BY City'
+
+#Объединить Города(из 1 страны) из 2 столбцов в 1
+'SELECT City, Country FROM Customers
+ WHERE Country = ?
+ UNION ALL
+ SELECT City, Country FROM Suppliers
+ WHERE Country = ?
+ ORDER BY City', 'Russia', 'Russia'
+
+#Создать таблицу
+'CREATE TABLE Person(
+ person_id integer      NOT NULL PRIMARY KEY,
+ name      varchar(100) NOT NULL UNIQUE,
+ city      varchar(100) NOT NULL UNIQUE,
+ bio       text         NOT NULL UNIQUE
+)'
+
+'CREATE TABLE Person(
+ person_id integer      NOT NULL PRIMARY KEY,
+ name      varchar(100) NOT NULL UNIQUE,
+ city      varchar(100) NOT NULL UNIQUE,
+ bio       text         NOT NULL UNIQUE
+)'
+
+================================================
+#Внешний ключ
+#db.execute("PRAGMA foreign_keys = ON")
+'CREATE TABLE auth(
+ auth_id INTEGER PRIMARY KEY,
+ name varchar(100) NOT NULL,
+ age  integer CHECK(age > 16)
+)'
+
+'CREATE TABLE books(
+ book_id INTEGER PRIMARY KEY,
+ title      text    NOT NULL,
+ count_page integer NOT NULL CHECK(count_page > 0),
+ price      real    CHECK(price > 0),
+ auth_id    integer,
+ FOREIGN KEY(auth_id) REFERENCES auth(auth_id)  
+)'
+
+#Не сработает! отсутсвует пользоватьель с id 5
+'INSERT INTO books(title, count_page, price, auth_id)
+ VALUES(?, ?, ?, ?)', 'Book 5', 200, 50, 5
+
+'UPDATE books SET auth_id = ? WHERE title = ?', 5, 'Book 4'
+
+#Не удалит пользователя пока с ним связаны данные
+'DELETE FROM auth WHERE name = ?', 'Leo'
+
+======================================================
+#Реализация многие ко многим
+'CREATE TABLE auth(
+ auth_id INTEGER PRIMARY KEY,
+ name varchar(100) NOT NULL,
+ age  integer CHECK(age > 16)
+)'
+
+'CREATE TABLE books(
+ book_id INTEGER PRIMARY KEY,
+ title      text    NOT NULL,
+ count_page integer NOT NULL CHECK(count_page > 0),
+ price      real    CHECK(price > 0)
+)'
+
+'CREATE TABLE auth_book(
+ auth_id INTEGER NOT NULL,
+ book_id INTEGER NOT NULL,
+ FOREIGN KEY(auth_id) REFERENCES auth(auth_id), 
+ FOREIGN KEY(book_id) REFERENCES books(book_id)
+)'
+
+#Работает 2 автора у книге
+'INSERT INTO auth_book(auth_id, book_id)
+ VALUES(?, ?)', 1, 1
+
+'INSERT INTO auth_book(auth_id, book_id)
+ VALUES(?, ?)', 2, 1
+
+#Отсутсвоет пользователь или книга
+'INSERT INTO auth_book(auth_id, book_id)
+ VALUES(?, ?)', 5, 5
+
+========================================================
+#Выставить значение не меньше 0
+'price integer CHECK(price > 0)'
+
+#Дефолтное значение
+"city varchar(100) DEFAULT 'Kazan'"
+
+#Индексы ускоряют поиск
+'CREATE INDEX name_index ON users(name)'
+'CREATE INDEX auth_book_index ON auth_book(auth_id, book_id)'
+
+#Добавить в таблицу новый столбец
+'ALTER TABLE users ADD bio varchar(100)'
+
+#Удалить столбец
+'ALTER TABLE users DROP COLUMN age'
+
+
+#Среднее значение столбца
+'SELECT AVG(price) FROM Products'
+
+#Количество записей в столбце
+'SELECT COUNT(user_id) FROM users'
+'SELECT COUNT(user_id) FROM users WHERE city = ?', 'Kazan'
+
+#Первое значение
+'SELECT FIRST(CustomerName) FROM Customers'
+
+#Последнее значение
+'SELECT LAST(CustomerName) FROM Customers'
+
+'SELECT MIN(price) FROM Products'
+'SELECT MAX(price) FROM Products'
+
+#Сумма всех значений столбца
+'SELECT SUM(price) FROM Products'
+
+#Объединения результатов выборки по одному или нескольким столбцам
+#Сумма продаж альбома
+'SELECT Singer, SUM(Sale) FROM Artists GROUP BY Singer'
+
+#Когда был выпущен последний альбом группы
+'SELECT Singer, MAX(Year) FROM Artists GROUP BY Singer'
+
+#применяется после GROUP BY
+'SELECT Singer, SUM(Sale) FROM Artists GROUP BY Singer HAVING SUM(Sale) > 20000'
+
+#Лимиты
+'SELECT * FROM users LIMIT 5'
+'SELECT * FROM users LIMIT 5 OFFSET 10'
+'SELECT * FROM users LIMIT 5, 10'
