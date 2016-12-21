@@ -134,4 +134,37 @@ OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%' AND Country = ?", 'Russia'
  bio       text         NOT NULL UNIQUE
 )'
 
+================================================
 #Внешний ключ
+#db.execute("PRAGMA foreign_keys = ON")
+'CREATE TABLE auth(
+ auth_id INTEGER PRIMARY KEY,
+ name varchar(100) NOT NULL,
+ age  integer CHECK(age > 16)
+)'
+
+'CREATE TABLE books(
+ book_id INTEGER PRIMARY KEY,
+ title      text    NOT NULL,
+ count_page integer NOT NULL CHECK(count_page > 0),
+ price      real    CHECK(price > 0),
+ auth_id    integer,
+ FOREIGN KEY(auth_id) REFERENCES auth(auth_id)  
+)'
+
+#Не сработает! отсутсвует пользоватьель с id 5
+'INSERT INTO books(title, count_page, price, auth_id)
+ VALUES(?, ?, ?, ?)', 'Book 5', 200, 50, 5
+
+'UPDATE books SET auth_id = ? WHERE title = ?', 5, 'Book 4'
+
+#Не удалит пользователя пока с ним связаны данные
+'DELETE FROM auth WHERE name = ?', 'Leo'
+======================================================
+
+
+
+
+
+
+
