@@ -160,11 +160,40 @@ OR CustomerName LIKE 'R%' OR CustomerName LIKE 'W%' AND Country = ?", 'Russia'
 
 #Не удалит пользователя пока с ним связаны данные
 'DELETE FROM auth WHERE name = ?', 'Leo'
+
 ======================================================
+#Реализация многие ко многим
+'CREATE TABLE auth(
+ auth_id INTEGER PRIMARY KEY,
+ name varchar(100) NOT NULL,
+ age  integer CHECK(age > 16)
+)'
 
+'CREATE TABLE books(
+ book_id INTEGER PRIMARY KEY,
+ title      text    NOT NULL,
+ count_page integer NOT NULL CHECK(count_page > 0),
+ price      real    CHECK(price > 0)
+)'
 
+'CREATE TABLE auth_book(
+ auth_id INTEGER NOT NULL,
+ book_id INTEGER NOT NULL,
+ FOREIGN KEY(auth_id) REFERENCES auth(auth_id), 
+ FOREIGN KEY(book_id) REFERENCES books(book_id)
+)'
 
+#Работает 2 автора у книге
+'INSERT INTO auth_book(auth_id, book_id)
+ VALUES(?, ?)', 1, 1
 
+'INSERT INTO auth_book(auth_id, book_id)
+ VALUES(?, ?)', 2, 1
 
+#Отсутсвоет пользователь или книга
+'INSERT INTO auth_book(auth_id, book_id)
+ VALUES(?, ?)', 5, 5
+ 
+========================================================
 
 

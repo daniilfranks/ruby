@@ -6,6 +6,7 @@ begin
   db = SQLite3::Database.new('test.db')
   db.execute('DROP TABLE books')
   db.execute('DROP TABLE auth')
+  db.execute('DROP TABLE auth_book')
 
   db.close
 rescue SQLite3::Exception => e
@@ -34,9 +35,22 @@ begin
               book_id INTEGER PRIMARY KEY,
               title      text    NOT NULL,
               count_page integer NOT NULL CHECK(count_page > 0),
-              price      real    CHECK(price > 0),
-              auth_id    integer,
-              FOREIGN KEY(auth_id) REFERENCES auth(auth_id)  
+              price      real    CHECK(price > 0)
+            )')
+
+  db.close
+rescue SQLite3::Exception => e
+  puts 'Exception occurred'
+  puts e
+end
+
+begin
+  db = SQLite3::Database.new('test.db')
+  db.execute('CREATE TABLE auth_book(
+              auth_id INTEGER NOT NULL,
+              book_id INTEGER NOT NULL,
+              FOREIGN KEY(auth_id) REFERENCES auth(auth_id), 
+              FOREIGN KEY(book_id) REFERENCES books(book_id)
             )')
 
   db.close
@@ -64,14 +78,14 @@ end
 
 begin
   db = SQLite3::Database.new('test.db')
-  db.execute('INSERT INTO books(title, count_page, price, auth_id)
-              VALUES(?, ?, ?, ?)', 'Book 1', 215, 30, 1)
-  db.execute('INSERT INTO books(title, count_page, price, auth_id)
-              VALUES(?, ?, ?, ?)', 'Book 2', 345, 18, 1)
-  db.execute('INSERT INTO books(title, count_page, price, auth_id)
-              VALUES(?, ?, ?, ?)', 'Book 3', 120, 15, 2)
-  db.execute('INSERT INTO books(title, count_page, price, auth_id)
-              VALUES(?, ?, ?, ?)', 'Book 4', 156, 23, 3)
+  db.execute('INSERT INTO books(title, count_page, price)
+              VALUES(?, ?, ?)', 'Book 1', 215, 30)
+  db.execute('INSERT INTO books(title, count_page, price)
+              VALUES(?, ?, ?)', 'Book 2', 345, 18)
+  db.execute('INSERT INTO books(title, count_page, price)
+              VALUES(?, ?, ?)', 'Book 3', 120, 15)
+  db.execute('INSERT INTO books(title, count_page, price)
+              VALUES(?, ?, ?)', 'Book 4', 156, 23)
 
   db.close
 rescue SQLite3::Exception => e
@@ -81,31 +95,14 @@ end
 
 begin
   db = SQLite3::Database.new('test.db')
-  db.execute('INSERT INTO auth(name, age)
-              VALUES(?, ?)', 'Glen', 10)
-
-  db.close
-rescue SQLite3::Exception => e
-  puts 'Exception occurred'
-  puts e
-end
-
-begin
-  db = SQLite3::Database.new('test.db')
-  db.execute("PRAGMA foreign_keys = ON")
-  db.execute('INSERT INTO books(title, count_page, price, auth_id)
-              VALUES(?, ?, ?, ?)', 'Book 5', 200, 50, 5)
-
-  db.close
-rescue SQLite3::Exception => e
-  puts 'Exception occurred'
-  puts e
-end
-
-begin
-  db = SQLite3::Database.new('test.db')
-  db.execute("PRAGMA foreign_keys = ON")
-  db.execute('UPDATE books SET auth_id = ? WHERE title = ?', 5, 'Book 4')
+  db.execute('INSERT INTO auth_book(auth_id, book_id)
+              VALUES(?, ?)', 1, 1 )
+  db.execute('INSERT INTO auth_book(auth_id, book_id)
+              VALUES(?, ?)', 2, 2 )
+  db.execute('INSERT INTO auth_book(auth_id, book_id)
+              VALUES(?, ?)', 3, 3 )
+  db.execute('INSERT INTO auth_book(auth_id, book_id)
+              VALUES(?, ?)', 4, 3 )
 
   db.close
 rescue SQLite3::Exception => e
@@ -116,7 +113,8 @@ end
 begin
   db = SQLite3::Database.new('test.db')
   db.execute("PRAGMA foreign_keys = ON")
-  db.execute('DELETE FROM auth WHERE name = ?', 'Leo')
+  db.execute('INSERT INTO auth_book(auth_id, book_id)
+              VALUES(?, ?)', 5, 5 )
 
   db.close
 rescue SQLite3::Exception => e
