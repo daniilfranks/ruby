@@ -9,9 +9,10 @@ class EdutechionalResty
   end
 end
 
-api= EdutechionalResty.new
+api = EdutechionalResty.new
+puts api
 #puts api.posts
 #puts api.posts.body
-puts api.posts.code
-puts api.posts.message
-puts api.posts.inspect
+#puts api.posts.code
+#puts api.posts.message
+#puts api.posts.inspect
