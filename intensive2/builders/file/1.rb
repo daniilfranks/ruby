@@ -46,3 +46,16 @@ end
 puts Parent.descendants
 
 Parent.descendants.each do | x |  puts x.nu end
+
+  class B
+  include ObjectSpace
+
+  def foo
+    trace_object_allocations do
+      obj = Object.new
+      p "Generation is #{allocation_generation(obj)}"
+    end
+  end
+end
+
+B.new.foo
