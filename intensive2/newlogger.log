@@ -1,0 +1,7 @@
+# Logfile created on 2017-01-09 18:01:52 +0300 by logger.rb/56438
+D, [2017-01-09T18:01:52.649016 #6798] DEBUG -- : This  is Base
+F, [2017-01-09T18:01:52.649086 #6798] FATAL -- : Need to implement this function!
+D, [2017-01-09T18:01:52.649138 #6798] DEBUG -- : This  is A
+I, [2017-01-09T18:01:52.649199 #6798]  INFO -- : running A
+D, [2017-01-09T18:01:52.649251 #6798] DEBUG -- : This  is B
+I, [2017-01-09T18:01:52.649297 #6798]  INFO -- : running B
