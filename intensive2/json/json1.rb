@@ -7,8 +7,8 @@ uri = URI(url)
 response = Net::HTTP.get(uri)
 
 standard = JSON.parse(response)
-symbol = JSON.parse(response, symbolize_names: true)
-struct = JSON.parse(response, object_class: OpenStruct)
+symbol   = JSON.parse(response, symbolize_names: true)
+struct   = JSON.parse(response, object_class: OpenStruct)
 
 # p symbol[:id]
 # p symbol[:title]
@@ -27,8 +27,8 @@ url = 'http://jsonplaceholder.typicode.com/posts/1'
 response = HTTParty.get(url)
 
 standard = JSON.parse(response.to_json)
-symbol = JSON.parse(response.to_json, symbolize_names: true)
-struct = JSON.parse(response.to_json, object_class: OpenStruct)
+symbol   = JSON.parse(response.to_json, symbolize_names: true)
+struct   = JSON.parse(response.to_json, object_class: OpenStruct)
 
 # p standard
 # p symbol
