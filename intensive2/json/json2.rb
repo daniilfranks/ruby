@@ -4,7 +4,7 @@ require 'ostruct'
 
 sample = File.read('sample.json')
 
-data = JSON.parse(sample,object_class: OpenStruct)
+data = JSON.parse(sample, object_class: OpenStruct)
 
 fathers = data.fathers
 # pp fathers
