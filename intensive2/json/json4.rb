@@ -68,3 +68,18 @@ end
 #write_json('json4.json', hash4)
 #read_json('json4.json')
 
+p loc1 = {"longitude" => "2.13012", "latitude" => "48.8014"}
+p loc2 = {"longitude" => "-90.556", "latitude" => "41.0634"}
+
+p loc1_json = loc1.to_json
+p loc2_json = loc2.to_json
+
+p loc1_2_json = loc1_json + loc2_json
+
+p JSON[([loc1_json, loc2_json]).to_json]
+
+p JSON[([loc1_json, loc2_json]).to_json].map{ |s| JSON[s] }
+
+p array_json = [loc1_json, loc2_json].map{ |s| JSON[s] }.to_json
+
+p JSON[array_json]
