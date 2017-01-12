@@ -6,10 +6,12 @@ require 'ostruct'
 require 'pp'
 
 class JSONReader
-	attr_accessor :filename, :events, :requirements
+	attr_accessor :filename, :hash_name
 
-	def initialize(filename)
-		@filename = filename
+	def initialize(filename, hash_name)
+		@filename  = filename
+		@hash_name = hash_name
+		@hash      = {}
 		begin
 			#raise "File #{@filename} already exists!" if File.exist?(@filename)
 			#@file = File.new(@filename, 'w')
@@ -51,8 +53,10 @@ hash = { 1 => { name: 'Danila', age: 25 }, 2 => { name: 'Leon', age: 30 },
 				}
 
 hash2 = { 4 => { name: 'Jok', age: 27 }, 5 => { name: 'Gleb', age: 23 },
-				  6=> { name: 'Karbon', age: 32 }
+				  6 => { name: 'Karbon', age: 32 }
 				}
+
+hash3 = { name: 'Tiny', age: 35 }
 
 #json = JSONReader.new('json3.json')
 
