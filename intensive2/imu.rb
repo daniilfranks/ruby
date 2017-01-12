@@ -1,5 +1,4 @@
 class State
-
   def initialize
     @data = [{}]
   end
@@ -8,25 +7,26 @@ class State
     @data.last[key]
   end
 
-  def []=(key,value)
+  def []=(key, value)
     @data.last[key] = value
   end
-
-  def checkpoint
-    @data.push(Marshal.load(Marshal.dump(@data.last)))
-  end
-
-  def rollback
-    @data.pop
-  end
-
 end
-
 
 state = State.new
 
-state['hej'] = 'hopp'
+state['name'] = 'Den'
+state['name2'] = 'Fedor'
+p state
 
-puts state['hej']
 
-puts state
+array = [{}]
+
+key = 1
+name = 'Leo'
+
+key1 = 2
+name1 = 'Jok'
+
+array.last[key] = 'name'
+array.last[key1] = 'name1'
+p array
