@@ -133,3 +133,40 @@ end
 #hash = file_json
 #p hash
 
+hash = {}
+hash['users'] = {}
+
+hash['users'][1] = { name: 'Danila', age: 25}
+hash['users'][2] = { name: 'Leo', age: 30}
+
+json = JSON.generate(hash)
+
+file = open('json4.json', 'w')
+file.write(json)
+file.close
+
+file = File.read('json4.json')
+parse_json = JSON.parse(file)
+
+parse_json = JSON.generate(hash)
+file = open('json4.json', 'w')
+file.write(parse_json)
+file.close
+
+#add hash
+file = File.read('json4.json')
+parse_json = JSON.parse(file)
+parse_json['users']['3'] = { name: 'Tiny', age: 35}
+
+#add file
+generate_json = JSON.generate(parse_json)
+file = open('json4.json', 'w')
+file.write(generate_json)
+file.close
+
+#read file
+file = File.read('json4.json')
+parse_json = JSON.parse(file, object_class: OpenStruct)
+p parse_json
+p parse_json['users']['1'].name
+p parse_json['users']['1'].age
