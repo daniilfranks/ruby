@@ -43,8 +43,8 @@ p '*'*45
 #user = JSON.parse(file, object_class: OpenStruct)
 #p user['1']
 
-hash4 = { 1 => { name: 'Danila', age: 25 } }
-hash5 = { 2 => { name: 'Karbon', age: 32 } }
+#hash4 = { 1 => { name: 'Danila', age: 25 } }
+#hash5 = { 2 => { name: 'Karbon', age: 32 } }
 
 def write_json(filename, hash)
 	unless File.exist?(filename)
@@ -68,18 +68,68 @@ end
 #write_json('json4.json', hash4)
 #read_json('json4.json')
 
-p loc1 = {"longitude" => "2.13012", "latitude" => "48.8014"}
-p loc2 = {"longitude" => "-90.556", "latitude" => "41.0634"}
+#p loc1 = {"longitude" => "2.13012", "latitude" => "48.8014"}
+#p loc2 = {"longitude" => "-90.556", "latitude" => "41.0634"}
 
-p loc1_json = loc1.to_json
-p loc2_json = loc2.to_json
+#p loc1_json = loc1.to_json
+#p loc2_json = loc2.to_json
 
-p loc1_2_json = loc1_json + loc2_json
+#p loc1_2_json = loc1_json + loc2_json
 
-p JSON[([loc1_json, loc2_json]).to_json]
+#p JSON[([loc1_json, loc2_json]).to_json]
 
-p JSON[([loc1_json, loc2_json]).to_json].map{ |s| JSON[s] }
+#p JSON[([loc1_json, loc2_json]).to_json].map{ |s| JSON[s] }
 
-p array_json = [loc1_json, loc2_json].map{ |s| JSON[s] }.to_json
+#p array_json = [loc1_json, loc2_json].map{ |s| JSON[s] }.to_json
 
-p JSON[array_json]
+#p JSON[array_json]
+
+#hash = { 1 => { name: 'Danila', age: 25 } }
+#hash2 = { 2 => { name: 'Karbon', age: 32 } }
+#file = File.open('json4.json', 'w')
+#file.write(JSON.generate(hash))
+
+#unless File.exist?('json4.json')
+#	file = File.new('json4.json', 'w')
+#end
+
+#file = File.read('json4.json')
+#file_json = JSON.parse(file)
+#new_json = hash2
+
+#json = [file_json, new_json].map{ |s| JSON[s] }.to_json
+#result_json = JSON[json]
+#p result_json
+#file = File.new('json4.json', 'w')
+#file.write(JSON.generate(result_json))
+
+#file = File.read('json4.json')
+#file_json = JSON.parse(file)
+#p file_json
+
+
+#hash = { 1 => { name: 'Danila', age: 25 } }
+#hash2 = { 2 => { name: 'Karbon', age: 32 } }
+#file = File.open('json4.json', 'w')
+#file.write(JSON.generate(hash))
+
+#file = File.read('json4.json')
+#file_json = JSON.parse(file)
+#p file_json
+#p hash2
+
+#file_json.merge!(hash2)
+#p file_json
+
+#json = JSON.generate(hash2)
+#p json
+#json = JSON.generate(file_json)
+
+#file = File.open('json4.json', 'w')
+#file.write(JSON.generate(json))
+
+#file = File.read('json4.json')
+#file_json = JSON.parse(file)
+#hash = file_json
+#p hash
+
