@@ -92,5 +92,49 @@ p 'First title text text'.split[0..1].join(' ')
 
 p '*'*45
 
+p 'name'.inquiry.name?
+p 'name '.inquiry.name?
 
+p 'name'.pluralize
+p 'ruby'.pluralize
+p 'item'.pluralize
+p 'cart'.pluralize
+p 'blog'.pluralize
+p 'post'.pluralize
 
+p 'posts'.singularize
+p 'rubies'.singularize
+
+p '*'*45
+
+p 'post'.camelize
+p 'class_post'.camelize
+
+p 'Post'.underscore
+p 'ClassPost'.underscore
+
+p 'ruby on rails'.titleize
+
+p 'John Smith'.parameterize
+p "John Smith".parameterize(preserve_case: true)
+
+p 'User'.foreign_key
+p 'Post'.foreign_key
+
+p '*'*45
+
+p '2017-01-14'.to_date
+
+p 5551234.to_s(:phone)
+
+p 1234567890.50.to_s(:currency)
+p 1234.to_s(:currency)
+
+p 1.ordinalize
+p 2.ordinalize
+p 3.ordinalize
+
+p [1,2,3].sum
+p (1..10).sum
+
+p '*'*45
