@@ -27,3 +27,6 @@ api_auth_header = {"Authorization" => "Bearer #{bearer_token}"}
 
 #url3 = 'https://api.twitter.com/1.1/friends/ids.json?cursor=-1&screen_name=twitterapi&count=5000'
 #ap HTTParty.get(url3, headers: api_auth_header)
+
+#url4 = 'https://api.twitter.com/1.1/account/settings.json?lang=en'
+#ap HTTParty.post(url4, headers: api_auth_header)
