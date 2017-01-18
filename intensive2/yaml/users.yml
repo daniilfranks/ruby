@@ -1,0 +1,15 @@
+---
+users:
+- !ruby/struct:User
+  name: Danila
+  age: 25
+  city: Kazan
+- !ruby/struct:User
+  name: Leon
+  age: 30
+  city: NY
+- !ruby/struct:User
+  name: Tony
+  age: 43
+  city: London
+date: 2017-01-18 16:35:50.888677880 +03:00
