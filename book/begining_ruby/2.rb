@@ -28,4 +28,3 @@ end
 
 p Square.test_method
 p Square.new.test_method
-
