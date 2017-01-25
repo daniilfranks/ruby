@@ -35,3 +35,25 @@ def fibo(limit)
 end
 
 fibo(100)
+
+p '*'*40
+
+require 'date'
+
+p DateTime.new(2017, 02, 28, 18, 30, 10, '+3:00')
+p DateTime.new(2017, 02, 28, 18, 30, 10, '+3:00').to_s
+
+p DateTime::now
+p DateTime::now.to_s
+
+date = DateTime.now
+p date.year
+p date.hour
+
+p Date.parse('2017-01-25').to_time
+
+p (Date.new(2017, 1, 1)..Date.new(2017, 1, 31)).each { |i| puts i }
+#p (Date.new(2017, 1, 1).day..Date.new(2017, 1, 31).day).each { |i| puts i }
+
+p Date.parse('2017-01-25').to_time
+
