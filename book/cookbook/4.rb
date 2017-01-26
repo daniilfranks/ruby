@@ -39,10 +39,35 @@ end
 open('first.txt').each { |i| puts i }
 
 
+class Frog
+	attr_reader :name
+	attr_accessor :speak_english
 
+	def initialize(name)
+		@name = name
+	end
 
+	def speak
+		@speak_english ||= @name.size > 6
+		@speak_english ? "Hi #{@name}" : 'Ribbit'
+	end
 
+	define_method(:sci_name) do
+		species = 'Ashot'
+		species = 'Vagit' if instance_variable_get('@speak_english')
+		species
+	end
+end
 
+p Frog.new('Leonard').speak
+p lucas = Frog.new('Lucas')
+p lucas.speak
+p lucas.name
+p lucas.speak_english = true
+p lucas.speak
+p '*'*40
+p lucas.instance_variable_get('@name')
+p lucas.instance_variable_set('@name', 'Bob')
+p lucas.name
 
-
-
+p lucas.sci_name
