@@ -56,4 +56,3 @@ p (Date.new(2017, 1, 1)..Date.new(2017, 1, 31)).each { |i| puts i }
 #p (Date.new(2017, 1, 1).day..Date.new(2017, 1, 31).day).each { |i| puts i }
 
 p Date.parse('2017-01-25').to_time
-

@@ -90,6 +90,3 @@ end
 
 p 'my name Den'.capitalize_better
 #p ''.capitalize_better
-
-
-
