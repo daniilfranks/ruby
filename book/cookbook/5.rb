@@ -61,8 +61,5 @@ p Fate.new
 p Fate.number_instantiated
 p Fate.new
 p Fate.number_instantiated
-p Fate.new
+p glen = Fate.new
 p Fate.number_instantiated
-
-p '*'*40
-
