@@ -4,7 +4,8 @@ class Car
 	end
 
 	def drive(distance = 0)
-		puts "drive car #{self}: #{distance}"
+		#puts "drive car #{self}: #{distance}"
+		distance
 	end
 end
 
