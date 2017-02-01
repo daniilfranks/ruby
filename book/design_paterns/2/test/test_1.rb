@@ -26,4 +26,8 @@ class TestCar < Minitest::Test
 	def test_set_balance
 		assert_equal(2000 , @bank.set_balance(2000))
 	end
+
+	def test_about_account
+		assert_equal("Account: account001, Balance 500", @bank.about_account)
+	end
 end
