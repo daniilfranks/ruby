@@ -1,24 +1,25 @@
-class Subject
+module Subject
 	def initialize
 		@observers = []
 	end
 
 	def notify_observers
 		@observers.each do |observer|
-			observer.update(self)
+			observer.call(self)
 		end
 	end
 
-	def add_observer(observer)
+	def add_observer(&observer)
 		@observers << observer
 	end
 
-	def delete_observer(observer)
+	def delete_observer(&observer)
 		@observer.delete(observer)
 	end
 end
 
-class Employee < Subject
+class Employee
+	include Subject
 	attr_accessor :name, :title, :salary
 
 	def initialize(name, title, salary)
@@ -34,8 +35,11 @@ class Employee < Subject
 	end
 end
 
-subject = Subject.new
 den = Employee.new('Den', 'Title', 50000)
 
-den.add_observer(subject)
+den.add_observer do |changed_employee|
+	puts "#{changed_employee.name}"
+	puts "#{changed_employee.salary}"
+end
+
 den.salary = 70000

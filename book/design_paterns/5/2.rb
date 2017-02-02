@@ -40,5 +40,3 @@ den = Employee.new('Den', 'Title', 50000)
 
 den.add_observer(payroll)
 den.salary = 70000
-
-den.notify_observers
