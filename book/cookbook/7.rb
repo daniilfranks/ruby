@@ -66,13 +66,3 @@ p 1.class.superclass
 
 #p Object.methods
 #p String.methods
-
-
-
-
-
-
-
-
-
-
