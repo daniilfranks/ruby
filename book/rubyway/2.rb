@@ -24,11 +24,33 @@ module Bank
 	end
 end
 
+module Rank
+	def increment
+		@rank += 1
+	end
+
+	def decrement
+		@rank -= 1
+	end
+
+	def my_rank
+		case @rank
+		when 0..5
+			'User'
+		when 6..10
+			'Moderator'
+		else
+			'God'
+		end
+	end
+end
+
 class User
 	include Role
 	include Bank
+	include Rank
 
-	attr_reader :name, :password, :id, :balance, :role
+	attr_reader :name, :password, :id, :balance, :role, :rank
 
 	def initialize(name, password, id)
 		@name      = name
@@ -36,6 +58,7 @@ class User
 		@id        = id
 		@balance   = 0
 		@role      = 1
+		@rank      = 0
 	end
 end
 
@@ -47,9 +70,24 @@ p den.balance
 p den.change_role(10)
 
 
-den = User.new('Ashot', 'A@1p$9nZ7g(0S4s', 2)
-p den
+ashot = User.new('Ashot', 'A@1p$9nZ7g(0S4s', 2)
+p ashot
 
-den.make_withdrawal(3000)
-p den.balance
-p den.change_role(10)
+ashot.make_withdrawal(3000)
+p ashot.balance
+p ashot.change_role(10)
+p ashot.rank
+
+ashot.increment
+ashot.increment
+ashot.increment
+ashot.decrement
+p ashot.rank
+p ashot.my_rank
+
+ashot.increment
+ashot.increment
+ashot.increment
+ashot.increment
+p ashot.rank
+p ashot.my_rank
