@@ -95,6 +95,34 @@ class D < SuperGeneratorFile
 	end
 end
 
+class Request
+	attr_reader :type, :priority
+
+	def initialize(type, priority)
+		@type     = type
+		@priority = priority
+	end
+end
+
+class E < SuperGeneratorFile
+	attr_reader :request
+
+	def initialize(user, city, age, request)
+		@request = request
+		super(user, city, age)
+	end
+
+	private
+
+	def body
+		[@user, @city, @age].join(', ')
+	end
+
+	def footer
+		"===== #{request.type}, #{request.priority} ====="
+	end
+end
+
 sgf = SuperGeneratorFile.new('Den', 'Kazan', 25)
 p sgf
 #p sgf.show_generator
@@ -120,3 +148,10 @@ puts
 d = D.new(sgf)
 p d
 d.show_generator
+
+puts
+
+request = Request.new('general', 1)
+e = E.new('Den', 'Kazan', 25, request)
+p e
+e.show_generator
