@@ -90,7 +90,7 @@ def show(hash)
 	return handle_fail if response.status == 'fail'
 
 	if response.status == 'success'
-		"Successful response: #{response.data}"
+		puts "Successful response: #{response.data}"
 	end
 end
 
@@ -106,6 +106,6 @@ hash_error = { status: 'error', error_message: 'fatal error', data: 'Hello metho
 hash_fail = { status: 'fail', error_message: 'fail', data: 'Hello method' }
 hash_success = { status: 'success', error_message: 'fatal error', data: 'Hello method' }
 
-p show(hash_success)
-p show(hash_error)
-p show(hash_fail)
+show(hash_success)
+# show(hash_error)
+show(hash_fail)
