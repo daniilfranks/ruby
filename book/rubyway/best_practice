@@ -6,3 +6,4 @@ pattern_template.rb
 pattern_decorator.rb
 dependency_injection.rb
 pattern_factory.rb
+pattern_singleton.rb
