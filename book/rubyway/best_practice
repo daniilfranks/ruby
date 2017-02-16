@@ -5,3 +5,4 @@ tel_dont_to_ask.rb
 pattern_template.rb
 pattern_decorator.rb
 dependency_injection.rb
+pattern_factory.rb
