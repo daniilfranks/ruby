@@ -57,12 +57,13 @@ describe 'Car' do
 
 end
 
-	#describe '.colors' do
-	#	it 'return arrays colors name'
-	#		c = ['blue', 'black', 'red', 'green']
-	#		expect(Car.colors).to match_array(c)
-	#	end
-	#end
+# expect('Den').to('Den')
+# expect('Den').not_to('Leo')
 
-	# expect().to()
-	# expect().not_to()
+# expect('Danila').to match(/D.n.a/)
+# expect(true).to be(true)
+# expect([cat,dog]).to match_array([cat,dog])
+
+# expect(1).to eq(1)
+# expect(1).to be == 1
+# expect(1).to equal(1)
