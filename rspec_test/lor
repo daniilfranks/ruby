@@ -1,0 +1,17 @@
+
+Car
+  attributes
+[32m    read and write for :make[0m
+[32m    read and write for :year[0m
+[32m    read and write for :color[0m
+[32m    reading for :wheels[0m
+  .colors
+[32m    return arrays colors name[0m
+  #full_name
+[32m    return a sting in the expected format[0m
+    when initialize with no arguments
+[32m      return a string default values[0m
+
+Finished in 0.00335 seconds (files took 0.18172 seconds to load)
+[32m7 examples, 0 failures[0m
+
